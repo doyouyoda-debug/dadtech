@@ -115,16 +115,18 @@
             </div>
             <h1 class="brand-font text-2xl tracking-widest text-white/90">DadTech Games</h1>
           </div>
-          <nav class="hidden md:flex space-x-6 font-medium text-white/70">
-            <a href="#" class="hover:text-white">Home</a>
-            <a href="#" class="hover:text-white">Projects</a>
-            <a href="#" class="hover:text-white">Team</a>
-            <a href="#" class="hover:text-white">Events</a>
-            <a href="#" class="hover:text-white">Contact</a>
-          </nav>
-          <button class="px-4 py-2 rounded-lg font-semibold text-white border border-white/30 bg-white/10 hover:bg-white/20 transition">
-            Join the Mystery
-          </button>
+          <div class="flex items-center space-x-6">
+            <nav class="hidden md:flex space-x-6 font-medium text-white/70">
+              <a href="#" class="hover:text-white">Home</a>
+              <a href="#" class="hover:text-white">Games</a>
+              <a href="#" class="hover:text-white">Hall of Fame</a>
+              <a href="#" class="hover:text-white">Events</a>
+              <a href="#" class="hover:text-white">Contact</a>
+            </nav>
+            <button class="px-4 py-2 rounded-lg font-semibold text-white border border-white/30 bg-white/10 hover:bg-white/20 transition">
+              Join as a Game Creator
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -138,18 +140,18 @@
         <!-- Left: content, left-aligned -->
         <div class="text-left">
           <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg">Attend My Lives, Build The Games!</h2>
-          <p class="text-lg text-indigo-200 max-w-2xl mb-10">
-            You attend my TikTok lives and we build the games together! I will add this week’s biggest contributors right here!
-          </p>
+        <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
+            You attend my TikTok lives and we build the games together! I will add this week's biggest contributors right here!
+        </p>
           <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-lg transition hover:scale-105">
-            Explore the Lodge
+            Go to Tik Tok Now
           </button>
         </div>
 
         <!-- Right: glass card with contributors -->
         <div class="md:justify-self-end">
-          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl backdrop-saturate-150 shadow-lg p-6 w-full md:w-80 text-white/90">
-            <h3 class="brand-font text-xl mb-4">This Week’s Contributors</h3>
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-6 w-full md:w-80 text-white/90">
+            <h3 class="brand-font text-xl mb-4">This Week’s Game Contributors</h3>
             <ul id="contributors-list" class="space-y-3 text-white/80">
               <!-- Filled by script -->
             </ul>
@@ -161,31 +163,41 @@
     <!-- Features -->
     <section class="px-10 py-20 bg-gradient-to-b from-indigo-950 to-blue-950 relative">
       <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        <div class="p-6 bg-indigo-900/40 rounded-2xl border border-blue-800/40 shadow-lg hover:scale-105 transition">
-          <h3 class="text-2xl title-font mb-3 text-blue-300">Forest Animations</h3>
-          <p class="text-indigo-200 text-sm">
-            Bring creatures and legends from the woods to life through cinematic mystery.
-          </p>
+        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+          <div class="p-5 flex flex-col flex-1">
+            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-6" />
+            <h3 class="text-xl font-semibold text-blue-300">Play Turtle Topple!</h3>
+            <p class="text-sm text-indigo-200 mt-2">Help Tanner the Turtle and his friends Prickles catch all of the burgers!</p>
+            <button class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300">Play Now</button>
+          </div>
         </div>
-        <div class="p-6 bg-indigo-900/40 rounded-2xl border border-blue-800/40 shadow-lg hover:scale-105 transition">
-          <h3 class="text-2xl title-font mb-3 text-blue-300">Cryptid Stories</h3>
-          <p class="text-indigo-200 text-sm">
-            Storyboards and scripts steeped in supernatural secrets — decoded one frame at a time.
-          </p>
+        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+          <div class="p-5 flex flex-col flex-1">
+            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-6" />
+            <h3 class="text-xl font-semibold text-blue-300">Turtle Topple!</h3>
+            <p class="text-sm text-indigo-200 mt-2">Help Tanner the Turtle and his friends Prickles catch all of the burgers!</p>
+            <button class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300">Play Now</button>
+          </div>
         </div>
-        <div class="p-6 bg-indigo-900/40 rounded-2xl border border-blue-800/40 shadow-lg hover:scale-105 transition">
-          <h3 class="text-2xl title-font mb-3 text-blue-300">Mystery Machines</h3>
-          <p class="text-indigo-200 text-sm">
-            Build contraptions that hum with the unknown. Inspired by the Pines twins’ inventions.
-          </p>
+        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+          <div class="p-5 flex flex-col flex-1">
+            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-6" />
+            <h3 class="text-xl font-semibold text-blue-300">Turtle Topple!</h3>
+            <p class="text-sm text-indigo-200 mt-2">Help Tanner the Turtle and his friends Prickles catch all of the burgers!</p>
+            <button class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300">Play Now</button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Gallery -->
-    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative">
-      <h2 class="title-font text-center text-4xl mb-12 text-blue-300">Recent Projects</h2>
-      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative overflow-hidden">
+      <!-- Dark forest background image with blur and fade -->
+      <div class="pointer-events-none absolute inset-0 bg-[url('/src/images/darkforrest.png')] bg-cover bg-center opacity-80" style="filter: blur(2px);"></div>
+      <!-- Fade overlay to blend into content -->
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-indigo-950/60"></div>
+      <h2 class="title-font text-center text-4xl mb-12 text-blue-300 relative z-10">Recent Projects</h2>
+      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
         <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
           <img src="https://images.unsplash.com/photo-1630659324761-83fbc3a7780e?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
           <div class="p-5">
@@ -202,11 +214,12 @@
           </div>
         </div>
 
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
-          <img src="https://images.unsplash.com/photo-1523365280197-f1783db9fe62?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
-          <div class="p-5">
+        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+          <div class="p-5 flex flex-col flex-1">
+            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-4" />
             <h3 class="text-xl font-semibold text-blue-300">Mystery Shack 2.0</h3>
             <p class="text-sm text-indigo-200 mt-2">Reimagining the legend through modern story design.</p>
+            <button class="mt-auto pt-4 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300">Play Now</button>
           </div>
         </div>
       </div>
@@ -265,6 +278,88 @@
             <span class="font-medium">@${name}</span>
           `;
           list.appendChild(li);
+        });
+      })();
+
+      // Firefly cursor repel effect
+      (function cursorRepel(){
+        const fireflies = document.querySelectorAll('.firefly');
+        const repelDistance = 150;
+        const repelForce = 15;
+        const firefliesData = [];
+        let animationFrameId = null;
+
+        // Store original positions
+        fireflies.forEach((fly) => {
+          firefliesData.push({
+            el: fly,
+            originalLeft: parseFloat(fly.style.left),
+            originalTop: parseFloat(fly.style.top),
+            offsetX: 0,
+            offsetY: 0,
+            targetOffsetX: 0,
+            targetOffsetY: 0
+          });
+        });
+
+        function animate() {
+          let hasMovement = false;
+          firefliesData.forEach((data) => {
+            // Smoothly interpolate towards target offset
+            data.offsetX += (data.targetOffsetX - data.offsetX) * 0.15;
+            data.offsetY += (data.targetOffsetY - data.offsetY) * 0.15;
+
+            if (Math.abs(data.offsetX) > 0.05 || Math.abs(data.offsetY) > 0.05) {
+              hasMovement = true;
+              data.el.style.left = (data.originalLeft + data.offsetX / 100) + 'vw';
+              data.el.style.top = (data.originalTop + data.offsetY / 100) + 'vh';
+            } else if (Math.abs(data.targetOffsetX) < 0.1 && Math.abs(data.targetOffsetY) < 0.1) {
+              // Reset to original when close enough
+              data.offsetX = 0;
+              data.offsetY = 0;
+              data.el.style.left = data.originalLeft + 'vw';
+              data.el.style.top = data.originalTop + 'vh';
+            }
+          });
+          if (hasMovement) {
+            animationFrameId = requestAnimationFrame(animate);
+          } else {
+            animationFrameId = null;
+          }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+          const mouseX = e.clientX;
+          const mouseY = e.clientY;
+
+          firefliesData.forEach((data) => {
+            const rect = data.el.getBoundingClientRect();
+            const flyX = rect.left + rect.width / 2;
+            const flyY = rect.top + rect.height / 2;
+
+            const dx = flyX - mouseX;
+            const dy = flyY - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < repelDistance && distance > 0) {
+              // Calculate repel direction
+              const angle = Math.atan2(dy, dx);
+              const force = (repelDistance - distance) / repelDistance;
+              data.targetOffsetX = Math.cos(angle) * repelForce * force * 100;
+              data.targetOffsetY = Math.sin(angle) * repelForce * force * 100;
+              
+              if (!animationFrameId) {
+                animationFrameId = requestAnimationFrame(animate);
+              }
+            } else {
+              // Smoothly return to original position
+              data.targetOffsetX = 0;
+              data.targetOffsetY = 0;
+              if (!animationFrameId) {
+                animationFrameId = requestAnimationFrame(animate);
+              }
+            }
+          });
         });
       })();
     </script>
