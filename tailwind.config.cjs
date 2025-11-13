@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./index.html", "./src/**/*.{html,js}"] ,
+  content: ["./*.html", "./src/**/*.{html,js}", "./novGame/**/*.{html,js}"] ,
   theme: {
     extend: {},
   },

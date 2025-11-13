@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DadTech Games | Play Games Built on Live!</title>
+    <title>About DadTech | Teaching Game Design & AI</title>
     <link rel="stylesheet" href="dist/styles.css" />
 
     <style>
@@ -110,10 +110,10 @@
       <div class="mx-6 mt-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl backdrop-saturate-150 shadow-lg supports-[backdrop-filter]:bg-white/10">
         <div class="flex justify-between items-center px-6 py-3">
           <div class="flex items-center space-x-3">
-            <div>
-              <img src="/src/images/controller.png" alt="Controller logo" class="w-10 h-10 object-contain" />
+            <div class="w-10 h-10 rounded-full flex items-center justify-center border border-white/30 bg-white/10 overflow-hidden">
+              <img src="/src/images/controller.png" alt="Controller logo" class="w-6 h-6 object-contain" />
             </div>
-            <h1 class="brand-font text-2xl tracking-widest text-white/90 pl-2">DadTech Games</h1>
+            <h1 class="brand-font text-2xl tracking-widest text-white/90">DadTech Games</h1>
           </div>
           <div class="flex items-center space-x-6">
             <nav class="hidden md:flex space-x-6 font-medium text-white/70">
@@ -137,92 +137,172 @@
       <div class="absolute inset-0 bg-[url('/src/images/turtlebanner.png')] bg-cover bg-center opacity-40"></div>
       <!-- Fade the bottom of the banner into the next section color -->
       <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-indigo-950"></div>
-      <div class="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start pt-40">
+      <div class="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center pt-40">
         <!-- Left: content, left-aligned -->
         <div class="text-left">
-          <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg">Attend My Lives, Build The Games!</h2>
-        <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
-            You attend my TikTok lives and we build the games together! I will add this week's biggest contributors right here!
-        </p>
-          <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-lg transition hover:scale-105 text-center">
-            Go to Tik Tok Now
+          <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg">About DadTech</h2>
+          <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
+            We're on a mission to make game design and AI accessible to everyone, turning creativity into reality through live community building.
+          </p>
+          <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-lg transition hover:scale-105 text-center inline-block">
+            Watch Our Lives
           </a>
         </div>
 
-        <!-- Right: glass card with contributors -->
+        <!-- Right: glass card with mission statement -->
         <div class="md:justify-self-end">
-          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-6 w-full md:w-80 text-white/90">
-            <h3 class="brand-font text-xl mb-4">This Week’s Top Game Contributors</h3>
-            <ul id="contributors-list" class="space-y-3 text-white/80">
-              <!-- Filled by script -->
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-6 w-full md:w-96 text-white/90">
+            <h3 class="brand-font text-xl mb-4 text-blue-300">Our Mission</h3>
+            <p class="text-indigo-200 text-sm leading-relaxed">
+              To democratize game development and AI literacy by creating an inclusive community where anyone can learn, create, and contribute to amazing interactive experiences.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What We Do -->
+    <section class="px-10 py-20 bg-gradient-to-b from-indigo-950 to-blue-950 relative">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="title-font text-center text-4xl mb-12 text-blue-300">What We're Doing</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Live Game Development -->
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition p-6">
+            <div class="text-3xl mb-4">🎮</div>
+            <h3 class="text-xl font-semibold text-blue-300 mb-3">Live Game Development</h3>
+            <p class="text-sm text-indigo-200 leading-relaxed">
+              We build games live on TikTok with our community! Viewers contribute ideas, vote on features, and watch as we code in real-time using cutting-edge AI tools.
+            </p>
+          </div>
+
+          <!-- AI Education -->
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition p-6">
+            <div class="text-3xl mb-4">🤖</div>
+            <h3 class="text-xl font-semibold text-blue-300 mb-3">AI & Game Design Education</h3>
+            <p class="text-sm text-indigo-200 leading-relaxed">
+              Learn how to leverage AI tools for character design, storytelling, art generation, and code completion. We break down complex concepts into actionable skills.
+            </p>
+          </div>
+
+          <!-- Community Rewards -->
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition p-6">
+            <div class="text-3xl mb-4">🏆</div>
+            <h3 class="text-xl font-semibold text-blue-300 mb-3">Community Recognition</h3>
+            <p class="text-sm text-indigo-200 leading-relaxed">
+              Top contributors earn spots in our Hall of Fame and get featured in our games. Your creativity and engagement drive the direction of every project.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why DadTech -->
+    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 bg-[url('/src/images/darkforrest.png')] bg-cover bg-center opacity-80" style="filter: blur(2px);"></div>
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-indigo-950/60"></div>
+      <div class="relative z-10 max-w-6xl mx-auto">
+        <h2 class="title-font text-center text-4xl mb-12 text-blue-300">Why DadTech?</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Accessible Learning -->
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-8">
+            <h3 class="text-2xl font-semibold text-blue-300 mb-4">Accessible Learning</h3>
+            <p class="text-indigo-200 mb-4 leading-relaxed">
+              No experience required! Whether you're 8 or 80, curious about code or game design—we make it approachable and fun. Complex topics are explained in simple terms with live demonstrations.
+            </p>
+            <ul class="text-indigo-200 text-sm space-y-2">
+              <li>✨ Beginner-friendly live streams</li>
+              <li>✨ Hands-on project-based learning</li>
+              <li>✨ Real-time Q&A with creators</li>
+            </ul>
+          </div>
+
+          <!-- Community First -->
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-8">
+            <h3 class="text-2xl font-semibold text-blue-300 mb-4">Community First</h3>
+            <p class="text-indigo-200 mb-4 leading-relaxed">
+              Your ideas matter. Our community isn't just spectators—you're co-creators. Vote on game features, suggest characters, and see your contributions come to life in our games.
+            </p>
+            <ul class="text-indigo-200 text-sm space-y-2">
+              <li>🎯 Vote on game mechanics</li>
+              <li>🎯 Suggest character designs</li>
+              <li>🎯 Get credited for ideas</li>
+            </ul>
+          </div>
+
+          <!-- AI-Powered -->
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-8">
+            <h3 class="text-2xl font-semibold text-blue-300 mb-4">AI-Powered Creation</h3>
+            <p class="text-indigo-200 mb-4 leading-relaxed">
+              We harness AI to accelerate creativity, not replace it. From code generation to art creation, we show you how to use AI as a tool to bring your ideas to life faster.
+            </p>
+            <ul class="text-indigo-200 text-sm space-y-2">
+              <li>⚡ AI-assisted coding</li>
+              <li>⚡ Generative art tools</li>
+              <li>⚡ Smart game mechanics</li>
+            </ul>
+          </div>
+
+          <!-- Real Games -->
+          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-8">
+            <h3 class="text-2xl font-semibold text-blue-300 mb-4">Real, Playable Games</h3>
+            <p class="text-indigo-200 mb-4 leading-relaxed">
+              We don't just talk about game design—we build them! Every project becomes a real, playable game that our community can enjoy, share, and play online.
+            </p>
+            <ul class="text-indigo-200 text-sm space-y-2">
+              <li>🎲 Fully playable releases</li>
+              <li>🎲 Community leaderboards</li>
+              <li>🎲 Continuous updates</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Features -->
+    <!-- Featured Games -->
     <section class="px-10 py-20 bg-gradient-to-b from-indigo-950 to-blue-950 relative">
-      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col cursor-pointer" onclick="window.location.href='./novGame/index.html'">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Play Burger Run!</h3>
-            <p class="text-sm text-indigo-200 mt-2">Help Tanner the Turtle and his friends Prickles catch all of the burgers!</p>
-            <a href="./novGame/index.html" class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300 text-center">Play Now</a>
+      <div class="max-w-6xl mx-auto">
+        <h2 class="title-font text-center text-4xl mb-12 text-blue-300">Games Built Live</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+            <img src="/src/images/prev.png" class="w-full h-48 object-cover" />
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="text-xl font-semibold text-blue-300 mb-2">Burger Run</h3>
+              <p class="text-sm text-indigo-200 mb-4 flex-grow">A fast-paced collection game built with our TikTok community. Help Tanner and Prickles catch burgers!</p>
+              <a href="./novGame/index.html" class="mt-auto border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300 text-center">Play Now</a>
+            </div>
           </div>
-        </div>
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/dadtechsquare.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Meet DadTech</h3>
-            <p class="text-sm text-indigo-200 mt-2">Discover the team behind the games and our mission to create fun experiences!</p>
-            <a href="./about.html" class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300 text-center">Read On</a>
+
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+            <img src="/src/images/zombieElf.png" class="w-full h-48 object-cover" />
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="text-xl font-semibold text-blue-300 mb-2">Coming Next...</h3>
+              <p class="text-sm text-indigo-200 mb-4 flex-grow">Follow us on TikTok to vote on the next game we build! Your ideas shape what we create.</p>
+              <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="mt-auto border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300 text-center">Follow Us</a>
+            </div>
           </div>
-        </div>
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/zombieElf.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Winter's Coming...</h3>
-            <p class="text-sm text-indigo-200 mt-2">Join me on TikTok for the next game we build together.</p>
-            <button class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300">Learn More</button>
+
+          <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
+            <img src="/src/images/dadtechsquare.png" class="w-full h-48 object-cover" />
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="text-xl font-semibold text-blue-300 mb-2">Your Game Here</h3>
+              <p class="text-sm text-indigo-200 mb-4 flex-grow">Got an amazing game idea? Join our community and help us build the next DadTech masterpiece!</p>
+              <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="mt-auto border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300 text-center">Join Us</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Gallery -->
-    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative overflow-hidden">
-      <!-- Dark forest background image with blur and fade -->
-      <div class="pointer-events-none absolute inset-0 bg-[url('/src/images/darkforrest.png')] bg-cover bg-center opacity-80" style="filter: blur(2px);"></div>
-      <!-- Fade overlay to blend into content -->
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-indigo-950/60"></div>
-      <h2 class="title-font text-center text-4xl mb-12 text-blue-300 relative z-10">Recent Projects</h2>
-      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
-          <img src="https://images.unsplash.com/photo-1630659324761-83fbc3a7780e?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
-          <div class="p-5">
-            <h3 class="text-xl font-semibold text-blue-300">Woods of Wonder</h3>
-            <p class="text-sm text-indigo-200 mt-2">A deep forest illusion brought to life in eerie moonlight.</p>
-          </div>
-        </div>
-
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
-          <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
-          <div class="p-5">
-            <h3 class="text-xl font-semibold text-blue-300">Portal Prototype</h3>
-            <p class="text-sm text-indigo-200 mt-2">A test of dimensional animation and deep-color gradients.</p>
-          </div>
-        </div>
-
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-4" />
-            <h3 class="text-xl font-semibold text-blue-300">Coming Soon</h3>
-            <p class="text-sm text-indigo-200 mt-2">Reimagining the legend through modern story design.</p>
-            <button class="mt-auto pt-4 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300">Play Now</button>
-          </div>
-        </div>
+    <!-- CTA -->
+    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="title-font text-4xl mb-6 text-blue-300">Ready to Create?</h2>
+        <p class="text-lg text-indigo-200 mb-8">
+          Join thousands of creators learning game design and AI. Follow us on TikTok and attend our next live stream!
+        </p>
+        <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold px-8 py-3 rounded-lg transition hover:scale-105 inline-block">
+          Follow DadTech on TikTok
+        </a>
       </div>
     </section>
 
@@ -235,7 +315,7 @@
     <script>
       // Active nav underline
       (function setActiveNav() {
-        const currentPage = window.location.pathname.includes('games.html') ? 'games' : 'home';
+        const currentPage = window.location.pathname.includes('about.html') ? 'about' : window.location.pathname.includes('halloffame.html') ? 'halloffame' : window.location.pathname.includes('games.html') ? 'games' : 'home';
         document.querySelectorAll('nav a[data-page]').forEach(link => {
           if (link.dataset.page === currentPage) {
             link.classList.add('border-b-2', 'border-white', 'text-white');
@@ -264,32 +344,6 @@
         f.style.setProperty('--flicker-duration', `${durFlicker}s`);
         fireflyContainer.appendChild(f);
       }
-
-      // Populate 3 random contributor usernames into the hero card
-      (function populateContributors(){
-        const candidates = [
-          'Marie', 'Speedy', 'Britzel', 'Lynette', 'Brandy', 'thatFishingGuy-Chris', 'Nathan', 'DTDNNY', 'Hannah', 'OperationMeraki'
-        ];
-        // Shuffle and take first 5 unique
-        for (let i = candidates.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-        }
-        const picks = candidates.slice(0, 5);
-        const list = document.getElementById('contributors-list');
-        if (!list) return;
-        picks.forEach((name) => {
-          const li = document.createElement('li');
-          li.className = 'flex items-center gap-3';
-          li.innerHTML = `
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/90 text-sm">
-              ${name.slice(0,2).toUpperCase()}
-            </span>
-            <span class="font-medium">@${name}</span>
-          `;
-          list.appendChild(li);
-        });
-      })();
 
       // Firefly cursor repel effect
       (function cursorRepel(){

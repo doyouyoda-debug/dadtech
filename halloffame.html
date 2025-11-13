@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DadTech Games | Play Games Built on Live!</title>
+    <title>Hall of Fame | DadTech Games</title>
     <link rel="stylesheet" href="dist/styles.css" />
 
     <style>
@@ -24,6 +24,23 @@
       .brand-font {
         font-family: 'Audiowide', cursive;
         letter-spacing: 1px;
+      }
+
+      /* Hero section with fixed background */
+      .hero-attic {
+        background-image: url('/src/images/atticBanner.png');
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .hero-attic::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        opacity: 0.6;
       }
 
       /* Fireflies */
@@ -110,7 +127,7 @@
       <div class="mx-6 mt-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl backdrop-saturate-150 shadow-lg supports-[backdrop-filter]:bg-white/10">
         <div class="flex justify-between items-center px-6 py-3">
           <div class="flex items-center space-x-3">
-            <div>
+            <div class="w-14 h-14 rounded-full flex items-center justify-center">
               <img src="/src/images/controller.png" alt="Controller logo" class="w-10 h-10 object-contain" />
             </div>
             <h1 class="brand-font text-2xl tracking-widest text-white/90 pl-2">DadTech Games</h1>
@@ -133,59 +150,68 @@
     </header>
 
     <!-- Hero -->
-    <section class="px-10 py-20 relative overflow-hidden h-[600px]">
-      <div class="absolute inset-0 bg-[url('/src/images/turtlebanner.png')] bg-cover bg-center opacity-40"></div>
+    <section class="px-10 py-20 relative h-100vh pb-30 hero-attic overflow-hidden">
+      <!-- Fireflies in hero -->
+      <div id="fireflies-hero" class="absolute inset-0"></div>
       <!-- Fade the bottom of the banner into the next section color -->
       <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-indigo-950"></div>
-      <div class="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start pt-40">
-        <!-- Left: content, left-aligned -->
+      <div class="relative z-10 max-w-6xl mx-auto flex flex-col gap-10 items-start justify-center h-full">
+        <!-- Content: left-aligned -->
         <div class="text-left">
-          <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg">Attend My Lives, Build The Games!</h2>
-        <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
-            You attend my TikTok lives and we build the games together! I will add this week's biggest contributors right here!
-        </p>
-          <a href="https://www.tiktok.com/@dadtechmaster" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-lg transition hover:scale-105 text-center">
-            Go to Tik Tok Now
-          </a>
+          <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg mt-[75px]">Hall of Fame</h2>
+          <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
+            Celebrating the amazing players and contributors who have shaped DadTech Games into what it is today!
+          </p>
         </div>
 
-        <!-- Right: glass card with contributors -->
-        <div class="md:justify-self-end">
-          <div class="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-6 w-full md:w-80 text-white/90">
-            <h3 class="brand-font text-xl mb-4">This Week’s Top Game Contributors</h3>
-            <ul id="contributors-list" class="space-y-3 text-white/80">
-              <!-- Filled by script -->
-            </ul>
+        <!-- Featured Creators in Hero -->
+        <div class="flex gap-3 w-full">
+          <!-- Lynette C -->
+          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+            <div class="flex flex-col items-center">
+              <img src="/src/images/halloffamers/LynCartoon.png" alt="Lynette C" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+              <h3 class="brand-font text-md mb-4text-center">Lynette C</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator & Contributor</p>
+              <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
+                An absolute idea powerhouse! Lynette's creativity has brought some of our most iconic characters and stories to life. 🌟
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Features -->
-    <section class="px-10 py-20 bg-gradient-to-b from-indigo-950 to-blue-950 relative">
-      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col cursor-pointer" onclick="window.location.href='./novGame/index.html'">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Play Burger Run!</h3>
-            <p class="text-sm text-indigo-200 mt-2">Help Tanner the Turtle and his friends Prickles catch all of the burgers!</p>
-            <a href="./novGame/index.html" class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300 text-center">Play Now</a>
+          <!-- Placeholder 2 -->
+          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+            <div class="flex flex-col items-center">
+              <img src="/src/images/halloffamers/Marie.png" alt="Mystery Professor" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+              <h3 class="brand-font text-md mb-4text-center">Maria</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator & Battle MVP</p>
+              <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
+                A true creative visionary! Maria's innovative ideas have helped shape some of our most beloved game worlds and experiences. ✨
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/dadtechsquare.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Meet DadTech</h3>
-            <p class="text-sm text-indigo-200 mt-2">Discover the team behind the games and our mission to create fun experiences!</p>
-            <a href="./about.html" class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300 text-center">Read On</a>
+
+          <!-- Placeholder 3 -->
+          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+            <div class="flex flex-col items-center">
+              <img src="/src/images/halloffamers/mysteryprof.png" alt="Hannah" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+              <h3 class="brand-font text-md mb-4text-center">Hannah</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator Contributor</p>
+              <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
+                An absolute idea powerhouse! Hannah's creativity has brought some of our most iconic characters and stories to life. 🌟
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/zombieElf.png" class="w-full h-48 object-cover rounded-xl mb-6" />
-            <h3 class="text-xl font-semibold text-blue-300">Winter's Coming...</h3>
-            <p class="text-sm text-indigo-200 mt-2">Join me on TikTok for the next game we build together.</p>
-            <button class="mt-10 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 p-8 font-medium transition duration-300">Learn More</button>
+
+          <!-- Placeholder 4 -->
+          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+            <div class="flex flex-col items-center">
+              <img src="/src/images/halloffamers/mysteryprof.png" alt="Brandy" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+              <h3 class="brand-font text-md mb-4text-center">Brandy</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator Contributor</p>
+              <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
+                An absolute idea powerhouse! Brandy's creativity has brought some of our most iconic characters and stories to life. 🌟
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -196,33 +222,12 @@
       <!-- Dark forest background image with blur and fade -->
       <div class="pointer-events-none absolute inset-0 bg-[url('/src/images/darkforrest.png')] bg-cover bg-center opacity-80" style="filter: blur(2px);"></div>
       <!-- Fade overlay to blend into content -->
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-indigo-950/60"></div>
-      <h2 class="title-font text-center text-4xl mb-12 text-blue-300 relative z-10">Recent Projects</h2>
+      
+      <h2 class="title-font text-center text-4xl mb-12 text-blue-300 relative z-10">Honorable Mention</h2>
       <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
-          <img src="https://images.unsplash.com/photo-1630659324761-83fbc3a7780e?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
-          <div class="p-5">
-            <h3 class="text-xl font-semibold text-blue-300">Woods of Wonder</h3>
-            <p class="text-sm text-indigo-200 mt-2">A deep forest illusion brought to life in eerie moonlight.</p>
-          </div>
-        </div>
+        
 
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition">
-          <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover" />
-          <div class="p-5">
-            <h3 class="text-xl font-semibold text-blue-300">Portal Prototype</h3>
-            <p class="text-sm text-indigo-200 mt-2">A test of dimensional animation and deep-color gradients.</p>
-          </div>
-        </div>
-
-        <div class="bg-indigo-900/50 rounded-2xl overflow-hidden border border-blue-800/40 hover:scale-105 transition flex flex-col">
-          <div class="p-5 flex flex-col flex-1">
-            <img src="/src/images/prev.png" class="w-full h-48 object-cover rounded-xl mb-4" />
-            <h3 class="text-xl font-semibold text-blue-300">Coming Soon</h3>
-            <p class="text-sm text-indigo-200 mt-2">Reimagining the legend through modern story design.</p>
-            <button class="mt-auto pt-4 border border-white/30 bg-white/10 hover:bg-white/20 text-white rounded-lg py-2 px-4 font-medium transition duration-300">Play Now</button>
-          </div>
-        </div>
+        
       </div>
     </section>
 
@@ -235,7 +240,7 @@
     <script>
       // Active nav underline
       (function setActiveNav() {
-        const currentPage = window.location.pathname.includes('games.html') ? 'games' : 'home';
+        const currentPage = window.location.pathname.includes('halloffame.html') ? 'halloffame' : window.location.pathname.includes('games.html') ? 'games' : 'home';
         document.querySelectorAll('nav a[data-page]').forEach(link => {
           if (link.dataset.page === currentPage) {
             link.classList.add('border-b-2', 'border-white', 'text-white');
@@ -243,12 +248,12 @@
         });
       })();
 
-      const fireflyContainer = document.getElementById('fireflies');
+      const fireflyContainer = document.getElementById('fireflies-hero');
       for (let i = 0; i < 40; i++) {
         const f = document.createElement('div');
         f.classList.add('firefly');
-        f.style.left = Math.random() * 100 + 'vw';
-        f.style.top = Math.random() * 100 + 'vh';
+        f.style.left = Math.random() * 100 + '%';
+        f.style.top = Math.random() * 100 + '%';
         // Randomize size for variety (color fixed to bright yellow)
         const size = 6 + Math.random() * 6; // 6px - 12px
         f.style.width = size + 'px';
@@ -265,20 +270,14 @@
         fireflyContainer.appendChild(f);
       }
 
-      // Populate 3 random contributor usernames into the hero card
+      // Populate all contributor usernames into the hero card
       (function populateContributors(){
         const candidates = [
-          'Marie', 'Speedy', 'Britzel', 'Lynette', 'Brandy', 'thatFishingGuy-Chris', 'Nathan', 'DTDNNY', 'Hannah', 'OperationMeraki'
+          'Marie', 'Speedy', 'Britzel', 'Lynette', 'Brandy', 'thatFishingGuy-Chris', 'Nathan', 'DTDNNY', 'Hannah'
         ];
-        // Shuffle and take first 5 unique
-        for (let i = candidates.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-        }
-        const picks = candidates.slice(0, 5);
         const list = document.getElementById('contributors-list');
         if (!list) return;
-        picks.forEach((name) => {
+        candidates.forEach((name) => {
           const li = document.createElement('li');
           li.className = 'flex items-center gap-3';
           li.innerHTML = `
