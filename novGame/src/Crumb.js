@@ -1,5 +1,5 @@
 class Crumb {
-    constructor(x, y, velocityX, velocityY) {
+    constructor(x, y, velocityX, velocityY, groundLevel = 550) {
         this.x = x;
         this.y = y;
         this.velocityX = velocityX;
@@ -10,6 +10,7 @@ class Crumb {
         this.maxLife = 1.0;
         this.rotation = Math.random() * Math.PI * 2;
         this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+        this.groundLevel = groundLevel;
     }
 
     update() {
@@ -20,9 +21,9 @@ class Crumb {
         this.x += this.velocityX;
         this.y += this.velocityY;
         
-        // Bounce off ground (y > groundLevel)
-        if (this.y > 900) { // Approximate ground level (canvas height - 100)
-            this.y = 900;
+        // Bounce off ground
+        if (this.y > this.groundLevel) {
+            this.y = this.groundLevel;
             this.velocityY *= -0.6; // Bounce with damping
             this.velocityX *= 0.95; // Friction
         }

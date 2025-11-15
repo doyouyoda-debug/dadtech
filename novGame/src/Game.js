@@ -43,8 +43,19 @@ class Game {
         this.healthBoxes = [];
         this.scoreBubbles = [];
         this.score = 0;
-        this.timeRemaining = 60; // seconds
+        this.timeRemaining = 90; // seconds (1.5 minutes)
         this.frameCount = 0;
+
+        // Soft caps for effects to prevent slowdowns
+        this.MAX_CRUMBS = 300;
+        this.MAX_BROCCOLI_PIECES = 300;
+        this.MAX_SCORE_BUBBLES = 40;
+
+        // HUD cache to avoid unnecessary DOM writes
+        this._lastScore = null;
+        this._lastTimeSec = null;
+        this._heartEls = [];
+        this._lastHeartsValue = null;
 
         // HUD element refs
         this.scoreElement = document.getElementById('scoreValue');
@@ -273,39 +284,41 @@ class Game {
     initializeHearts() {
         if (this.heartsContainer) {
             this.heartsContainer.innerHTML = '';
+            this._heartEls = new Array(this.health.maxHearts);
             for (let i = 0; i < this.health.maxHearts; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'heart';
                 heart.id = `heart-${i}`;
                 this.heartsContainer.appendChild(heart);
+                this._heartEls[i] = heart;
             }
+            this._lastHeartsValue = undefined; // force initial draw
         }
     }
 
     updateHUD() {
-        // Update score
-        if (this.scoreElement) {
-            this.scoreElement.textContent = this.score;
+        // Update score only if changed
+        if (this.scoreElement && this._lastScore !== this.score) {
+            this._lastScore = this.score;
+            this.scoreElement.textContent = String(this.score);
         }
-        
-        // Update time
-        if (this.timeElement) {
+
+        // Update time only when it changes (seconds precision)
+        if (this.timeElement && this._lastTimeSec !== this.timeRemaining) {
+            this._lastTimeSec = this.timeRemaining;
             const minutes = Math.floor(this.timeRemaining / 60);
             const seconds = this.timeRemaining % 60;
             this.timeElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
-        
-        // Update hearts
-        if (this.heartsContainer) {
+
+        // Update hearts only when value changes
+        if (this.heartsContainer && this._lastHeartsValue !== this.health.currentHearts) {
+            this._lastHeartsValue = this.health.currentHearts;
             for (let i = 0; i < this.health.maxHearts; i++) {
-                const heart = document.getElementById(`heart-${i}`);
-                if (heart) {
-                    if (i < this.health.currentHearts) {
-                        heart.classList.remove('empty');
-                    } else {
-                        heart.classList.add('empty');
-                    }
-                }
+                const heart = this._heartEls[i] || document.getElementById(`heart-${i}`);
+                if (!heart) continue;
+                if (i < this.health.currentHearts) heart.classList.remove('empty');
+                else heart.classList.add('empty');
             }
         }
     }
@@ -367,7 +380,7 @@ class Game {
         this.healthBoxes = [];
         this.scoreBubbles = [];
         this.score = 0;
-        this.timeRemaining = 60;
+        this.timeRemaining = 90;
         this.frameCount = 0;
         this.pricklesTriggered = false;
         this.lastPricklesScore = 35; // Reset to initial trigger score
@@ -417,7 +430,6 @@ class Game {
         // Check if score threshold reached to trigger HealthBox
         // HealthBox appears every 75 points (75, 150, 225, etc.)
         if (this.score >= this.lastHealthBoxScore + 75) {
-            console.log('Spawning health box at score', this.score);
             this.lastHealthBoxScore += 75;
             const randomX = Math.random() * (this.canvas.width - 100) + 50;
             this.healthBoxes.push(new HealthBox(randomX, 0, 0, -8, this.groundLevel));
@@ -528,8 +540,10 @@ class Game {
                 // Only count and remove burger if X key is held down
                 if (this.keys.x) {
                     this.score += 5;
-                    // Spawn score bubble above character's head
-                    this.scoreBubbles.push(new ScoreBubble(this.character.x, this.character.y - 50, 5));
+                    // Spawn score bubble above character's head (respect cap)
+                    if (this.scoreBubbles.length < this.MAX_SCORE_BUBBLES) {
+                        this.scoreBubbles.push(new ScoreBubble(this.character.x, this.character.y - 50, 5));
+                    }
                     // Only play sound if it's not already playing
                     if (this.munchSound.paused) {
                         this.munchSound.currentTime = 0;
@@ -552,8 +566,10 @@ class Game {
                                      bb.top > pricklesBounds.bottom);
                 if (intersects) {
                     this.score += 3;
-                    // Spawn score bubble above Prickles
-                    this.scoreBubbles.push(new ScoreBubble(this.prickles.x, this.prickles.y - 50, 3));
+                    // Spawn score bubble above Prickles (respect cap)
+                    if (this.scoreBubbles.length < this.MAX_SCORE_BUBBLES) {
+                        this.scoreBubbles.push(new ScoreBubble(this.prickles.x, this.prickles.y - 50, 3));
+                    }
                     this.burgers.splice(i, 1);
                 }
             }
@@ -640,21 +656,25 @@ class Game {
     }
 
     spawnCrumbs(x, y) {
-        // Spawn 8-12 crumbs in all directions
+        // Spawn 8-12 crumbs in all directions (respect cap)
         const count = Math.floor(Math.random() * 5) + 8;
-        for (let i = 0; i < count; i++) {
-            const angle = (i / count) * Math.PI * 2;
+        const available = Math.max(0, this.MAX_CRUMBS - this.crumbs.length);
+        const toSpawn = Math.min(count, available);
+        for (let i = 0; i < toSpawn; i++) {
+            const angle = (i / Math.max(1, toSpawn)) * Math.PI * 2;
             const speed = Math.random() * 4 + 3; // 3-7 px/frame
             const vx = Math.cos(angle) * speed;
             const vy = Math.sin(angle) * speed - 3; // Bias upward
-            this.crumbs.push(new Crumb(x, y, vx, vy));
+            this.crumbs.push(new Crumb(x, y, vx, vy, this.groundLevel));
         }
     }
 
     spawnBroccoliPieces(x, y) {
-        // Spawn 8-12 broccoli pieces in all directions
+        // Spawn 8-12 broccoli pieces in all directions (respect cap)
         const count = Math.floor(Math.random() * 5) + 8;
-        for (let i = 0; i < count; i++) {
+        const available = Math.max(0, this.MAX_BROCCOLI_PIECES - this.broccoliPieces.length);
+        const toSpawn = Math.min(count, available);
+        for (let i = 0; i < toSpawn; i++) {
             const angle = (i / count) * Math.PI * 2;
             const speed = Math.random() * 4 + 3; // 3-7 px/frame
             const vx = Math.cos(angle) * speed;

@@ -1,8 +1,8 @@
 const Physics = {
     gravity: 0.5,
     friction: 0.95,
-    acceleration: 0.8,
-    maxSpeed: 8,
+    acceleration: 1.0,
+    maxSpeed: 10,
     bounceCoefficient: 0.3
 };
 

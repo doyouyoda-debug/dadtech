@@ -79,6 +79,13 @@
             transition: opacity 0.3s ease;
         }
 
+        @media (max-width: 600px) {
+            .heart {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
         .heart.empty {
             opacity: 0.2;
         }
@@ -98,9 +105,10 @@
             .header-bar {
                 width: calc(100% - 16px);
                 flex-wrap: wrap;
-                gap: 8px;
-                padding: 8px;
-                justify-content: center;
+                gap: 6px;
+                padding: 6px 8px;
+                justify-content: space-between;
+                align-items: center;
             }
 
             .header-bar > div {
@@ -108,9 +116,14 @@
                 min-width: 0;
             }
 
-            .header-bar .flex.text-white\/90.font-bold.text-2xl {
-                font-size: 14px;
-                gap: 8px;
+            .header-bar .flex.items-center.gap-3.text-white\/90.font-bold.text-2xl {
+                font-size: 12px !important;
+                gap: 4px !important;
+            }
+
+            .header-bar .flex.items-center.gap-2 button {
+                padding: 2px 6px !important;
+                font-size: 10px !important;
             }
         }
 
@@ -145,11 +158,13 @@ Retrieved 2025-11-09, License - CC BY-SA 3.0
         /* Mobile Controls */
         .mobile-controls {
             display: none;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
+            flex-direction: row;
+            gap: 8px;
+            margin-top: 12px;
             width: 100%;
             max-width: 600px;
+            justify-content: space-between;
+            align-items: center;
         }
 
         @media (max-width: 600px) {
@@ -158,33 +173,30 @@ Retrieved 2025-11-09, License - CC BY-SA 3.0
             }
         }
 
-        .mobile-controls-row {
+        .mobile-center {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             justify-content: center;
-            width: 100%;
-        }
-
-        .mobile-controls-row.center-row {
-            justify-content: center;
+            align-items: center;
         }
 
         .mobile-btn {
-            flex: 1;
-            max-width: 120px;
-            padding: 14px 16px;
-            font-size: 16px;
+            flex: 0 1 auto;
+            min-width: 80px;
+            max-width: 100px;
+            padding: 12px 8px;
+            font-size: 14px;
             font-weight: bold;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: manipulation;
+            touch-action: none;
         }
 
         .mobile-btn:active {
@@ -337,14 +349,12 @@ Retrieved 2025-11-09, License - CC BY-SA 3.0
 
             <!-- Mobile Controls (shown on screens < 600px) -->
             <div class="mobile-controls">
-                <div class="mobile-controls-row">
-                    <button id="mobLeftBtn" class="mobile-btn left">← LEFT</button>
-                    <button id="mobRightBtn" class="mobile-btn right">RIGHT →</button>
-                </div>
-                <div class="mobile-controls-row center-row">
+                <button id="mobLeftBtn" class="mobile-btn left">← LEFT</button>
+                <div class="mobile-center">
                     <button id="mobJumpBtn" class="mobile-btn jump">JUMP ↑</button>
                     <button id="mobEatBtn" class="mobile-btn eat">EAT 👄</button>
                 </div>
+                <button id="mobRightBtn" class="mobile-btn right">RIGHT →</button>
             </div>
 
             <!-- Title Screen Modal -->
@@ -453,84 +463,75 @@ Retrieved 2025-11-09, License - CC BY-SA 3.0
         const game = new Game(canvas);
         game.start();
 
-        // Mobile controls setup
+        // Mobile controls setup (pointer-based, direct key control)
         const mobLeftBtn = document.getElementById('mobLeftBtn');
         const mobRightBtn = document.getElementById('mobRightBtn');
         const mobJumpBtn = document.getElementById('mobJumpBtn');
         const mobEatBtn = document.getElementById('mobEatBtn');
 
-        // Simulate keyboard events for mobile buttons
-        function createKeyEvent(key, type) {
-            return new KeyboardEvent(type, {
-                key: key,
-                code: key === 'ArrowLeft' ? 'ArrowLeft' : key === 'ArrowRight' ? 'ArrowRight' : key === 'ArrowUp' ? 'ArrowUp' : 'KeyX',
-                keyCode: key === 'ArrowLeft' ? 37 : key === 'ArrowRight' ? 39 : key === 'ArrowUp' ? 38 : 88,
-                bubbles: true
-            });
+        // Helpers to press/release keys directly on the game state
+        const press = (key) => {
+            if (!game || !game.keys) return;
+            if (key === 'left') {
+                game.keys.left = true;
+                game.keys.right = false; // prevent conflicting directions
+            } else if (key === 'right') {
+                game.keys.right = true;
+                game.keys.left = false;
+            } else if (key === 'up') {
+                game.keys.up = true;
+            } else if (key === 'x') {
+                game.keys.x = true;
+            }
+        };
+
+        const release = (key) => {
+            if (!game || !game.keys) return;
+            if (key === 'left') game.keys.left = false;
+            else if (key === 'right') game.keys.right = false;
+            else if (key === 'up') game.keys.up = false;
+            else if (key === 'x') game.keys.x = false;
+        };
+
+        // Ensure all keys are released (safety net)
+        const releaseAll = () => {
+            if (!game || !game.keys) return;
+            game.keys.left = false;
+            game.keys.right = false;
+            game.keys.up = false;
+            game.keys.x = false;
+        };
+
+        // Bind pointer events for reliable press/release
+        function bindControl(btn, key) {
+            if (!btn) return;
+            btn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                try { btn.setPointerCapture && btn.setPointerCapture(e.pointerId); } catch {}
+                press(key);
+            }, { passive: false });
+
+            const end = (e) => { e && e.preventDefault && e.preventDefault(); release(key); };
+            btn.addEventListener('pointerup', end, { passive: false });
+            btn.addEventListener('pointercancel', end, { passive: false });
+            btn.addEventListener('pointerleave', end, { passive: false });
+            btn.addEventListener('lostpointercapture', end, { passive: false });
+
+            // Mouse fallback
+            btn.addEventListener('mousedown', (e) => { e.preventDefault(); press(key); }, { passive: false });
+            btn.addEventListener('mouseup', (e) => { e.preventDefault(); release(key); }, { passive: false });
+            btn.addEventListener('mouseleave', (e) => { e.preventDefault(); release(key); }, { passive: false });
         }
 
-        // Left button
-        mobLeftBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowLeft', 'keydown'));
-        });
-        mobLeftBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowLeft', 'keyup'));
-        });
-        mobLeftBtn.addEventListener('mousedown', () => {
-            document.dispatchEvent(createKeyEvent('ArrowLeft', 'keydown'));
-        });
-        mobLeftBtn.addEventListener('mouseup', () => {
-            document.dispatchEvent(createKeyEvent('ArrowLeft', 'keyup'));
-        });
+        bindControl(mobLeftBtn, 'left');
+        bindControl(mobRightBtn, 'right');
+        bindControl(mobJumpBtn, 'up');
+        bindControl(mobEatBtn, 'x');
 
-        // Right button
-        mobRightBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowRight', 'keydown'));
-        });
-        mobRightBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowRight', 'keyup'));
-        });
-        mobRightBtn.addEventListener('mousedown', () => {
-            document.dispatchEvent(createKeyEvent('ArrowRight', 'keydown'));
-        });
-        mobRightBtn.addEventListener('mouseup', () => {
-            document.dispatchEvent(createKeyEvent('ArrowRight', 'keyup'));
-        });
-
-        // Jump button
-        mobJumpBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowUp', 'keydown'));
-        });
-        mobJumpBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('ArrowUp', 'keyup'));
-        });
-        mobJumpBtn.addEventListener('mousedown', () => {
-            document.dispatchEvent(createKeyEvent('ArrowUp', 'keydown'));
-        });
-        mobJumpBtn.addEventListener('mouseup', () => {
-            document.dispatchEvent(createKeyEvent('ArrowUp', 'keyup'));
-        });
-
-        // Eat button
-        mobEatBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('x', 'keydown'));
-        });
-        mobEatBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            document.dispatchEvent(createKeyEvent('x', 'keyup'));
-        });
-        mobEatBtn.addEventListener('mousedown', () => {
-            document.dispatchEvent(createKeyEvent('x', 'keydown'));
-        });
-        mobEatBtn.addEventListener('mouseup', () => {
-            document.dispatchEvent(createKeyEvent('x', 'keyup'));
+        // Global safety: release keys when page is hidden or blurred
+        window.addEventListener('blur', releaseAll);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) releaseAll();
         });
 
         // Start Game button

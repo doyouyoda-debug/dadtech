@@ -24,7 +24,7 @@ class Leaf {
                     : 0;
                 Leaf.frameHeight = Leaf.sprite.naturalHeight;
                 Leaf.spriteLoaded = true;
-                console.log('Leaf sprite loaded:', { naturalWidth: Leaf.sprite.naturalWidth, naturalHeight: Leaf.sprite.naturalHeight, frameCount: Leaf.frameCount, frameWidth: Leaf.frameWidth });
+                // sprite loaded
             };
             Leaf.sprite.onerror = (e) => console.error('Error loading leaf sprite:', e);
         }

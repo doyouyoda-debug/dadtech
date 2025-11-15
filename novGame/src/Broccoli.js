@@ -8,7 +8,6 @@ class Broccoli {
         Broccoli.sprite.src = 'images/brock.png';
         Broccoli.sprite.onload = () => { 
             Broccoli.loaded = true;
-            console.log('Broccoli sprite loaded');
         };
         Broccoli.sprite.onerror = (e) => console.error('Error loading brock.png', e);
     }
