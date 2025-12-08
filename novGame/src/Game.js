@@ -35,6 +35,11 @@ class Game {
 
         // Initialize game objects
         this.character = new Character(canvas.width, canvas.height, this.groundLevel);
+        // If level data has a start point, set character position so center aligns
+        if (window.levelData && window.levelData.start) {
+            this.character.x = window.levelData.start.x;
+            this.character.y = window.levelData.start.y - this.character.height / 2;
+        }
         this.leaves = Array(20).fill(null).map(() => new Leaf(canvas.width, canvas.height));
         this.burgers = [];
         this.broccolis = [];
@@ -373,6 +378,11 @@ class Game {
 
     resetGame() {
         this.character = new Character(this.canvas.width, this.canvas.height, this.groundLevel);
+        // If level data has a start point, set character position so center aligns
+        if (window.levelData && window.levelData.start) {
+            this.character.x = window.levelData.start.x;
+            this.character.y = window.levelData.start.y - this.character.height / 2;
+        }
         this.burgers = [];
         this.broccolis = [];
         this.crumbs = [];

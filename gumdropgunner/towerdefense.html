@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 1000px;
+            height: 600px;
+            background: #87ceeb;
+            border: 3px solid #333;
+            cursor: crosshair;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #ui {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .stat {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        
+        #towerMenu {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tower-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px 5px 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .tower-btn:hover {
+            background: #764ba2;
+        }
+        
+        .tower-btn.selected {
+            background: #ff6b6b;
+        }
+        
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            min-width: 300px;
+        }
+        
+        #gameOver h2 {
+            font-size: 36px;
+            margin: 0 0 20px 0;
+        }
+        
+        #gameOver p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        
+        #restartBtn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin-top: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        #restartBtn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div id="waveProgress" style="background: rgba(30, 30, 60, 0.8); padding: 15px; margin: 10px auto; max-width: 1000px; border-radius: 8px; text-align: center;">
+        <div style="color: #fff; font-weight: bold; margin-bottom: 10px;">Wave <span id="waveNumber">1</span> - Enemies Remaining: <span id="enemiesRemaining">0</span></div>
+        <div id="enemyDots" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; min-height: 30px;"></div>
+    </div>
+    
+    <div id="gameContainer">
+        <canvas id="canvas"></canvas>
+        <div id="gameOver">
+            <h2 id="gameOverText">GAME OVER!</h2>
+            <p>Lives Lost: <span id="finalLives">0</span></p>
+            <p>Enemies Defeated: <span id="finalScore">0</span></p>
+            <button id="restartBtn" onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+    
+    <div id="ui">
+        <div class="stat">💰 Money: <span id="money">500</span></div>
+        <div class="stat">❤️ Lives: <span id="lives">20</span></div>
+        <div class="stat">👾 Enemies: <span id="enemyCount">0</span></div>
+        <div class="stat">🏆 Score: <span id="score">0</span></div>
+    </div>
+
+    <div id="towerMenu">
+        <div><strong>Select Tower:</strong></div>
+        <button class="tower-btn selected" onclick="selectTower('gun')"><img src="/gumdropgunner/snowturret.png" alt="Snow Turret" style="height: 20px; vertical-align: middle;"> Snow Turret ($80)</button>
+        <button class="tower-btn" onclick="selectTower('laser')">🔴 Laser ($150)</button>
+        <button class="tower-btn" onclick="selectTower('gingerbread')"><img src="/gumdropgunner/gingercannon.png" alt="Cannon" style="height: 20px; vertical-align: middle;"> Gingerbread ($180)</button>
+        <button class="tower-btn" onclick="selectTower('bomb')">💣 Bomb ($200)</button>
+    </div>
+
+    <script src="towerdefense.js"></script>
+</body>
+</html>
