@@ -11,10 +11,34 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url('/gumdropgunner/gameback.png') center/cover no-repeat fixed;
+            filter: blur(0);
             font-family: Arial, sans-serif;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('/gumdropgunner/gameback.png') center/cover no-repeat fixed;
+            filter: blur(8px);
+            z-index: -1;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            right: 50px;
+            width: 400px;
+            height: 400px;
+            background: url('/gumdropgunner/breadtower.png') center/contain no-repeat;
+            z-index: -1;
         }
         
         #gameContainer {
@@ -23,6 +47,8 @@
             height: 600px;
             background: #87ceeb;
             border: 3px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
             cursor: crosshair;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
@@ -34,13 +60,13 @@
         }
         
         #ui {
-            margin-top: 20px;
+            /* hide the detailed stats per request */
+            display: none;
+        }
+        
+        #statsContainer {
             display: flex;
             gap: 20px;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
         }
         
         .stat {
@@ -49,17 +75,46 @@
             border-radius: 5px;
         }
         
-        #towerMenu {
-            margin-top: 20px;
-            background: rgba(0,0,0,0.8);
-            color: white;
+        #waveProgress {
+            background: rgba(30, 30, 60, 0.8);
             padding: 15px;
             border-radius: 8px;
+            text-align: center;
+            min-width: 300px;
+        }
+        
+        #waveProgress .wave-info {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        #enemyDots {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            min-height: 30px;
+        }
+        
+        #towerMenu {
+            /* place tower selector above the canvas (normal flow) */
+            position: static;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 10px 12px;
+            border-radius: 8px;
+            display: flex;
+            gap: 8px;
             align-items: center;
             flex-wrap: wrap;
             justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        #gameContainer {
+            margin-top: 10px; /* push canvas down a bit */
         }
         
         .tower-btn {
@@ -122,14 +177,27 @@
         #restartBtn:hover {
             background: #764ba2;
         }
-    </style>
+        </style>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BV33W61TY2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} 
+            gtag('js', new Date());
+            gtag('config', 'G-BV33W61TY2', { 'anonymize_ip': true });
+        </script>
 </head>
 <body>
-    <div id="waveProgress" style="background: rgba(30, 30, 60, 0.8); padding: 15px; margin: 10px auto; max-width: 1000px; border-radius: 8px; text-align: center;">
-        <div style="color: #fff; font-weight: bold; margin-bottom: 10px;">Wave <span id="waveNumber">1</span> - Enemies Remaining: <span id="enemiesRemaining">0</span></div>
-        <div id="enemyDots" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; min-height: 30px;"></div>
+    <!-- tower selector above the canvas -->
+    <div id="towerMenu">
+        <div><strong>Select Tower:</strong></div>
+        <button class="tower-btn selected" onclick="selectTower('gun')"><img src="/gumdropgunner/snowturret.png" alt="Snow Turret" style="height: 20px; vertical-align: middle;"> Snow Turret ($80)</button>
+        <button class="tower-btn" onclick="selectTower('laser')">🔴 Laser ($150)</button>
+        <button class="tower-btn" onclick="selectTower('gingerbread')"><img src="/gumdropgunner/gingercannon.png" alt="Cannon" style="height: 20px; vertical-align: middle;"> Gingerbread ($180)</button>
+        <button class="tower-btn" onclick="selectTower('bomb')"><img src="/gumdropgunner/licoriceLauncher.png" alt="Licorice Launcher" style="height: 20px; vertical-align: middle;"> Licorice Launcher ($200)</button>
     </div>
-    
+
     <div id="gameContainer">
         <canvas id="canvas"></canvas>
         <div id="gameOver">
@@ -139,22 +207,30 @@
             <button id="restartBtn" onclick="location.reload()">Play Again</button>
         </div>
     </div>
-    
-    <div id="ui">
+
+    <!-- wave info below the canvas -->
+    <div id="waveProgress" style="background: rgba(30, 30, 60, 0.8); padding: 12px; margin: 8px auto; max-width: 1000px; border-radius: 8px; text-align: center;">
+        <div class="wave-info">Wave <span id="waveNumber">1</span> - Enemies Remaining: <span id="enemiesRemaining">0</span></div>
+        <div id="enemyDots"></div>
+    </div>
+
+    <!-- stats below wave progress -->
+    <div id="ui" style="display: flex; gap: 12px; justify-content: center; margin: 8px auto; color: white; font-size: 15px; font-weight: bold;">
         <div class="stat">💰 Money: <span id="money">500</span></div>
         <div class="stat">❤️ Lives: <span id="lives">20</span></div>
         <div class="stat">👾 Enemies: <span id="enemyCount">0</span></div>
         <div class="stat">🏆 Score: <span id="score">0</span></div>
+        <div class="stat">🍪 Bombs: <span id="cookieBombs">0</span></div>
     </div>
 
-    <div id="towerMenu">
-        <div><strong>Select Tower:</strong></div>
-        <button class="tower-btn selected" onclick="selectTower('gun')"><img src="/gumdropgunner/snowturret.png" alt="Snow Turret" style="height: 20px; vertical-align: middle;"> Snow Turret ($80)</button>
-        <button class="tower-btn" onclick="selectTower('laser')">🔴 Laser ($150)</button>
-        <button class="tower-btn" onclick="selectTower('gingerbread')"><img src="/gumdropgunner/gingercannon.png" alt="Cannon" style="height: 20px; vertical-align: middle;"> Gingerbread ($180)</button>
-        <button class="tower-btn" onclick="selectTower('bomb')">💣 Bomb ($200)</button>
+    <!-- music controls -->
+    <div style="display: flex; gap: 8px; align-items: center; justify-content: center; margin: 8px auto; color: white; font-size: 13px; font-weight: bold; background: rgba(0,0,0,0.7); padding: 8px 12px; border-radius: 8px; max-width: 380px;">
+        <button id="musicToggle" onclick="toggleMusic()" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">🔇 Play Music</button>
+        <label for="volumeSlider" style="margin-left: 6px;">Volume:</label>
+        <input type="range" id="volumeSlider" min="0" max="100" value="30" oninput="setVolume(this.value)" style="width: 100px; cursor: pointer;">
+        <span id="volumeValue">30%</span>
     </div>
 
-    <script src="towerdefense.js"></script>
+    <script src="towerdefense.js?v=2"></script>
 </body>
 </html>

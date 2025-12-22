@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firestore Migration</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 40px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #0f0;
+            border: none;
+            color: #000;
+            font-weight: bold;
+        }
+        #output {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background: #000;
+            padding: 20px;
+            border: 1px solid #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firestore Data Migration</h1>
+    <p>This will copy data from treasureHunt/currentTreasure to pixelHunt/currentPixel</p>
+    <button onclick="migrateData()">Run Migration</button>
+    <div id="output"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCU2R3qRVbgULXXNNb_ylFrNgEi503NmzY",
+            authDomain: "dadtechgames.firebaseapp.com",
+            databaseURL: "https://dadtechgames-default-rtdb.firebaseio.com",
+            projectId: "dadtechgames",
+            storageBucket: "dadtechgames.firebasestorage.app",
+            messagingSenderId: "789983660743",
+            appId: "1:789983660743:web:1cac887b0bc490ab764ce2",
+            measurementId: "G-BV33W61TY2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.migrateData = async () => {
+            const output = document.getElementById('output');
+            output.textContent = 'Starting migration...\n';
+
+            try {
+                // Read old document
+                output.textContent += 'Reading treasureHunt/currentTreasure...\n';
+                const oldRef = doc(db, 'treasureHunt', 'currentTreasure');
+                const oldDoc = await getDoc(oldRef);
+
+                if (!oldDoc.exists()) {
+                    output.textContent += 'No data found in treasureHunt/currentTreasure\n';
+                    output.textContent += 'Nothing to migrate - you may need to create initial data\n';
+                    return;
+                }
+
+                const oldData = oldDoc.data();
+                output.textContent += 'Found old data:\n' + JSON.stringify(oldData, null, 2) + '\n\n';
+
+                // Create new document with renamed fields
+                const newData = {
+                    claimed: oldData.claimed || false,
+                    claimedBy: oldData.claimedBy || null,
+                    claimedAt: oldData.claimedAt || null,
+                    pixelCode: oldData.giftCardCode || oldData.pixelCode || 'DADTECH-PIXEL-HUNTER-2025',
+                    resetAt: oldData.resetAt || null,
+                    userAgent: oldData.userAgent || null,
+                    migratedAt: new Date().toISOString()
+                };
+
+                output.textContent += 'Writing to pixelHunt/currentPixel...\n';
+                const newRef = doc(db, 'pixelHunt', 'currentPixel');
+                await setDoc(newRef, newData);
+
+                output.textContent += '✓ Migration successful!\n\n';
+                output.textContent += 'New data:\n' + JSON.stringify(newData, null, 2) + '\n';
+            } catch (error) {
+                output.textContent += '✗ Migration failed:\n' + error.message + '\n';
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+</html>

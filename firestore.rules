@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Pixel hunt collection
+    match /pixelHunt/{document} {
+      // Anyone can read pixel status
+      allow read: if true;
+      // Only authenticated users can write (admin only)
+      allow write: if request.auth != null;
+      
+      // History subcollection
+      match /history/{historyId} {
+        // Anyone can read history
+        allow read: if true;
+        // Only authenticated users can write (admin only)
+        allow write: if request.auth != null;
+      }
+    }
+    
+    // Community signups collection
+    match /communitySignups/{document=**} {
+      // Anyone can read signups
+      allow read: if true;
+      // Anyone can write (create new signups)
+      allow write: if true;
+    }
+    
+    // Monster Opera Levels collection
+    match /monsterOperaLevels/{document=**} {
+      // Anyone can read levels (for the game)
+      allow read: if true;
+      // Only authenticated users can write (admin only)
+      allow write: if request.auth != null;
+    }
+    
+    // Monster Opera Leaderboard collection
+    match /monsterOperaLeaderboard/{document=**} {
+      // Anyone can read leaderboard
+      allow read: if true;
+      // Anyone can create new leaderboard entries
+      allow create: if true;
+      // No one can update or delete entries
+      allow update, delete: if false;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

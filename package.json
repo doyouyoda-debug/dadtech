@@ -5,6 +5,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
     "dev:css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
+    "build:game": "tailwindcss -i ./monsterOpera/style.css -o ./monsterOpera/style.min.css",
+    "watch:game": "tailwindcss -i ./monsterOpera/style.css -o ./monsterOpera/style.min.css --watch",
     "serve": "live-server --port=3000 --open=./index.html --quiet",
     "dev": "concurrently \"npm run dev:css\" \"npm run serve\""
   },

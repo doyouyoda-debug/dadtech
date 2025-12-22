@@ -26,13 +26,9 @@
         letter-spacing: 1px;
       }
 
-      /* Hero section with fixed background */
+      /* Hero section relies on page-level fixed background */
       .hero-attic {
-        background-image: url('/src/images/atticBanner.png');
-        background-attachment: fixed;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-image: none;
       }
 
       .hero-attic::before {
@@ -112,10 +108,63 @@
         0%, 90%, 100% { opacity: 0; }
         92%, 96% { opacity: 1; }
       }
+
+      /* Hidden Treasure Pixel */
+      .px-dot {
+        position: absolute;
+        background: radial-gradient(circle,
+          rgba(255, 235, 59, 1) 0%,
+          rgba(255, 235, 59, 0.95) 18%,
+          rgba(255, 235, 59, 0.45) 58%,
+          rgba(255, 235, 59, 0) 85%
+        );
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        pointer-events: auto;
+        opacity: 0.95;
+        box-shadow:
+          0 0 12px rgba(255, 235, 59, 0.95),
+          0 0 28px rgba(255, 235, 59, 0.55),
+          0 0 40px rgba(255, 235, 59, 0.35);
+        filter: blur(0.7px) drop-shadow(0 0 10px rgba(255, 235, 59, 0.6));
+        will-change: transform;
+        animation: dot-anim 3s ease-in-out infinite;
+      }
+
+      @keyframes dot-anim {
+        0%, 100% { opacity: 0.85; }
+        50% { opacity: 1; }
+      }
+
+      .px-dot:hover {
+        transform: scale(1.5);
+        transition: transform 0.2s ease;
+      }
     </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BV33W61TY2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+      gtag('config', 'G-BV33W61TY2', { 'anonymize_ip': true });
+    </script>
   </head>
 
   <body class="text-indigo-100 relative">
+
+    <!-- Page-wide overlays: blurred image + radial gradient -->
+    <div class="fixed inset-0 -z-20" style="background-image: url('/src/images/hallofFame.png'); background-size: cover; background-position: center; filter: blur(2px);"></div>
+    <div class="fixed inset-0 -z-10" style="background: radial-gradient(circle at top, rgba(20,10,48,0.65) 0%, rgba(2,3,20,0.35) 45%, rgba(2,3,20,0) 100%);"></div>
+
+    <!-- Full-page fixed background with blur -->
+    <div class="fixed inset-0 -z-10 opacity-70" style="background-image: url('/src/images/hallofFame.png'); background-size: cover; background-position: center; filter: blur(2px);"></div>
+    <!-- Bottom gradient fade -->
+    <div class="pointer-events-none fixed inset-x-0 bottom-0 h-32 -z-10 bg-gradient-to-b from-transparent to-indigo-950"></div>
 
     <!-- Background effects -->
     <div id="fireflies"></div>
@@ -138,10 +187,11 @@
               <a href="./games.html" class="hover:text-white pb-1" data-page="games">Games</a>
               <a href="./about.html" class="hover:text-white pb-1" data-page="about">About</a>
               <a href="./halloffame.html" class="hover:text-white pb-1" data-page="halloffame">Hall of Fame</a>
+              <a href="./chaoscage/index.html" class="hover:text-white pb-1" data-page="chaos">Chaos</a>
               <a href="#" class="hover:text-white pb-1">Events</a>
               <a href="#" class="hover:text-white pb-1">Contact</a>
             </nav>
-            <button class="px-4 py-2 rounded-lg font-semibold text-white border border-white/30 bg-white/10 hover:bg-white/20 transition">
+            <button class="px-4 py-2 rounded-lg font-semibold text-white border border-white/30 bg-white/10 hover:bg-white/20 transition" onclick="document.getElementById('communityModal').showModal()">
               Join as a Game Creator
             </button>
           </div>
@@ -153,36 +203,41 @@
     <section class="px-10 py-20 relative h-100vh pb-30 hero-attic overflow-hidden">
       <!-- Fireflies in hero -->
       <div id="fireflies-hero" class="absolute inset-0"></div>
-      <!-- Fade the bottom of the banner into the next section color -->
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-indigo-950"></div>
+      <!-- Backdrop blur overlay over banner -->
+      <div class="pointer-events-none absolute inset-0 backdrop-blur-md bg-black/10 z-0"></div>
+      <!-- Removed bottom gradient for clean edge under first row -->
       <div class="relative z-10 max-w-6xl mx-auto flex flex-col gap-10 items-start justify-center h-full">
         <!-- Content: left-aligned -->
-        <div class="text-left">
-          <h2 class="title-font text-5xl mb-6 text-white drop-shadow-lg mt-[75px]">Hall of Fame</h2>
-          <p class="text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
+        <div class="text-left relative">
+          <!-- Radial gradient backdrop behind the title/subtitle -->
+            <div class="pointer-events-none absolute inset-0 rounded-2xl" style="background: radial-gradient(circle at center, rgba(30, 27, 75, 0.55) 0%, rgba(30, 27, 75, 0.30) 45%, rgba(30, 27, 75, 0) 100%);"></div>
+          <h2 class="relative z-10 title-font text-5xl mb-6 text-white drop-shadow-lg mt-[75px]">Hall of Fame</h2>
+          <p class="relative z-10 text-lg text-indigo-200 max-w-2xl mb-10 font-light" style="font-family: 'Nunito', sans-serif;">
             Celebrating the amazing players and contributors who have shaped DadTech Games into what it is today!
           </p>
         </div>
 
         <!-- Featured Creators in Hero -->
-        <div class="flex gap-3 w-full">
-          <!-- Lynette C -->
-          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+        <div class="flex gap-4 w-full">
+          <!-- Jay Washington -->
+          <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
             <div class="flex flex-col items-center">
-              <img src="/src/images/halloffamers/LynCartoon.png" alt="Lynette C" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
-              <h3 class="brand-font text-md mb-4text-center">Lynette C</h3>
-              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator & Contributor</p>
+              <div class="w-[180px] h-[180px] rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center mb-8 mt-6 border-2 border-white/30 text-4xl font-bold">
+                JW
+              </div>
+              <h3 class="brand-font text-md mb-4 text-center">Jay Washington</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Community & Treasure Champion</p>
               <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
-                An absolute idea powerhouse! Lynette's creativity has brought some of our most iconic characters and stories to life. 🌟
+                An amazing friend and supporter of DadTech Games! Jay's enthusiasm and dedication have made a real impact on our community. 🎮
               </p>
             </div>
           </div>
 
           <!-- Placeholder 2 -->
-          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
             <div class="flex flex-col items-center">
               <img src="/src/images/halloffamers/Marie.png" alt="Mystery Professor" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
-              <h3 class="brand-font text-md mb-4text-center">Maria</h3>
+              <h3 class="brand-font text-md mb-4text-center">Marie</h3>
               <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator & Battle MVP</p>
               <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
                 A true creative visionary! Maria's innovative ideas have helped shape some of our most beloved game worlds and experiences. ✨
@@ -194,7 +249,7 @@
           
 
           <!-- Placeholder 4 -->
-          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
             <div class="flex flex-col items-center">
               <img src="/src/images/halloffamers/speedy.png" alt="Brandy" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
               <h3 class="brand-font text-md mb-4text-center">Speedy</h3>
@@ -205,34 +260,69 @@
             </div>
           </div>
 
-          <div class="flex-1 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
             <div class="flex flex-col items-center">
               <img src="/src/images/halloffamers/mysteryprof.png" alt="Hannah" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
-              <h3 class="brand-font text-md mb-4text-center">Hannah</h3>
-              <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator Contributor</p>
+              <h3 class="brand-font text-md mb-4text-center">SunFlower</h3>
+              <p class="text-blue-300 font-semibold text-xs mb-1">Super Contributor</p>
               <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
-                An absolute idea powerhouse! Hannah's creativity has brought some of our most iconic characters and stories to life. 🌟
+               Always a loyal fan and has over 100 minutes of dadtech games live viewing. 🌟
               </p>
             </div>
           </div>
 
         </div>
       </div>
-    </section>
 
-    <!-- Gallery -->
-    <section class="px-10 py-20 bg-gradient-to-b from-blue-950 to-indigo-950 relative overflow-hidden">
-      <!-- Dark forest background image with blur and fade -->
-      <div class="pointer-events-none absolute inset-0 bg-[url('/src/images/darkforrest.png')] bg-cover bg-center opacity-80" style="filter: blur(2px);"></div>
-      <!-- Fade overlay to blend into content -->
-      
-      <h2 class="title-font text-center text-4xl mb-12 text-blue-300 relative z-10">Honorable Mention</h2>
-      <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto relative z-10">
-        
+          <!-- Second row moved into hero -->
+    <div class="px-10 mt-4 relative">
+      <div class="flex gap-4 max-w-6xl mx-auto relative z-10">
+        <!-- Lynette C Card -->
+        <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex flex-col items-center">
+            <img src="/src/images/halloffamers/LynCartoon.png" alt="Lynette C" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+            <h3 class="brand-font text-md mb-4 text-center">Lynette C</h3>
+            <p class="text-blue-300 font-semibold text-xs mb-1">Super Creator & Contributor</p>
+            <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">
+              An absolute idea powerhouse! Lynette's creativity has brought some of our most iconic characters and stories to life. 🌟
+            </p>
+          </div>
+        </div>
 
-        
+        <!-- Iconic Gaming Card -->
+        <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex flex-col items-center">
+            <img src="/src/images/halloffamers/mysteryprof.png" alt="Iconic Gaming" class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+            <h3 class="brand-font text-md mb-4 text-center">Iconic Gaming</h3>
+            <p class="text-blue-300 font-semibold text-xs mb-1">Super Contributor & Fan</p>
+            <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">An awesome fan whose enthusiasm and generous support have elevated our games — thank you for his contributions!</p>
+          </div>
+        </div>
+
+        <!-- Placeholder Card 2 -->
+        <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex flex-col items-center">
+            <img src="/src/images/halloffamers/mysteryprof.png" alt="The next superstar..." class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+            <h3 class="brand-font text-md mb-4 text-center">The next superstar...</h3>
+            <p class="text-blue-300 font-semibold text-xs mb-1">Future Hall of Famer</p>
+            <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">Your name could be here soon!</p>
+          </div>
+        </div>
+
+        <!-- Placeholder Card 3 -->
+        <div class="flex-1 rounded-2xl border border-white/20 bg-black/40 backdrop-blur-lg backdrop-saturate-150 shadow-lg p-3 text-white/90">
+          <div class="flex flex-col items-center">
+            <img src="/src/images/halloffamers/mysteryprof.png" alt="The next superstar..." class="w-[180px] h-[180px] rounded-full object-cover border-2 border-white/30 mb-8 mt-6" />
+            <h3 class="brand-font text-md mb-4 text-center">The next superstar...</h3>
+            <p class="text-blue-300 font-semibold text-xs mb-1">Future Hall of Famer</p>
+            <p class="text-center text-indigo-200 text-xs leading-relaxed mt-4 mb-4">Your name could be here soon!</p>
+          </div>
+        </div>
       </div>
+    </div>
     </section>
+
+
 
     <!-- Footer -->
     <footer class="py-10 bg-indigo-950/80 text-center text-blue-200 text-sm border-t border-blue-800/40 relative z-10">
@@ -376,5 +466,255 @@
       })();
     </script>
 
-  </body>
-</html>
+    <!-- Pixel Found Modal -->
+    <dialog id="pixelModal" class="backdrop:bg-black/50 rounded-2xl border border-blue-800/40 bg-gradient-to-b from-indigo-950 to-blue-950 p-8 max-w-md w-full" style="position: relative;">
+      <button onclick="document.getElementById('pixelModal').close()" style="position: absolute; top: 1rem; right: 1rem;" class="text-white/70 hover:text-white text-2xl w-8 h-8 flex items-center justify-center">&times;</button>
+      
+      <div class="text-center">
+        <h2 class="text-2xl font-semibold text-blue-300 mb-6">🎉 Pixel Found!</h2>
+        
+        <p class="text-indigo-200 mb-6" id="pixelMessage">You discovered the hidden pixel! Please enter your TikTok username to claim your code.</p>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-blue-300 text-sm mb-2">Your TikTok Username: <span class="text-red-400">*</span></label>
+            <input type="text" id="tiktokUsername" placeholder="@yourname" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400" required>
+          </div>
+          
+          <button onclick="submitClaim()" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 rounded-lg hover:scale-105 transition">
+            Submit & Reveal Code
+          </button>
+          
+          <div id="codeSection" style="display: none;">
+            <div class="bg-white/10 border border-white/20 rounded-lg p-4">
+              <p class="text-blue-300 text-xs mb-2">Your Code:</p>
+              <code class="text-xl font-mono text-yellow-300 font-bold select-all block break-all" id="pixelCode"></code>
+            </div>
+            
+            <button onclick="copyPixelCode()" class="w-full bg-white/10 border border-white/20 text-white py-2 rounded-lg hover:bg-white/20 transition mt-4">
+              📋 Copy Code
+            </button>
+          </div>
+        </div>
+        
+        <p class="text-xs text-white/50 mt-4 italic">The hidden pixel is sometimes the smallest thing in the biggest place.</p>
+      </div>
+    </dialog>
+
+    <!-- Already Claimed Modal -->
+    <dialog id="claimedModal" class="backdrop:bg-black/50 rounded-2xl border border-blue-800/40 bg-gradient-to-b from-indigo-950 to-blue-950 p-8 max-w-md w-full" style="position: relative;">
+      <button onclick="document.getElementById('claimedModal').close()" style="position: absolute; top: 1rem; right: 1rem;" class="text-white/70 hover:text-white text-2xl w-8 h-8 flex items-center justify-center">&times;</button>
+      
+      <div class="text-center">
+        <h2 class="text-2xl font-semibold text-blue-300 mb-6">🔍 Too Late!</h2>
+        
+        <p class="text-indigo-200 mb-6">The treasure has already been claimed by another explorer.</p>
+        
+        <p class="text-white/70 text-sm mb-6">Keep your eyes open for the next hidden pixel hunt! 👀</p>
+        
+        <button onclick="document.getElementById('claimedModal').close()" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 rounded-lg hover:scale-105 transition">
+          Close
+        </button>
+      </div>
+    </dialog>
+
+    <!-- Community Subscription Modal -->
+    <dialog id="communityModal" class="backdrop:bg-black/50 rounded-2xl border border-blue-800/40 bg-gradient-to-b from-indigo-950 to-blue-950 p-8 max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-blue-300">Join Our Community!</h2>
+        <button onclick="document.getElementById('communityModal').close()" class="text-white/70 hover:text-white text-2xl">&times;</button>
+      </div>
+      
+      <p class="text-indigo-200 mb-6">Get the latest DadTech games, news, and exclusive freebies delivered to your inbox!</p>
+      
+      <form class="space-y-4" onsubmit="handleSubscribe(event)">
+        <input type="text" placeholder="Your Name" required class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400" />
+        
+        <input type="email" placeholder="Your Email" required class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400" />
+        
+        <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 rounded-lg hover:scale-105 transition">
+          Subscribe Now
+        </button>
+      </form>
+      
+      <p class="text-xs text-white/50 mt-4 text-center">We respect your privacy. Unsubscribe at any time.</p>
+    </dialog>
+
+    <script>
+      function handleSubscribe(event) {
+        event.preventDefault();
+        const form = event.target;
+        const name = form.querySelector('input[type="text"]').value;
+        const email = form.querySelector('input[type="email"]').value;
+        
+        console.log('Subscription:', { name, email });
+        
+        alert(`Thanks for subscribing, ${name}! Check your email for exclusive freebies!`);
+        document.getElementById('communityModal').close();
+        form.reset();
+      }
+
+      // Pixel claim function for Hall of Fame
+      let claimedCode = null;
+      (function() {
+        const el = document.querySelector('[data-init="1"]');
+        if (!el) return;
+
+        const url = 'https://claimpixel-uevkr2ryoa-uc.a.run.app';
+
+        function startCooldown(btn, seconds, originalText) {
+          window._claimCooldownUntil = Date.now() + seconds * 1000;
+          btn.disabled = true;
+          let remaining = Math.ceil((window._claimCooldownUntil - Date.now()) / 1000);
+          btn.textContent = `Please wait ${remaining}s`;
+          const timer = setInterval(() => {
+            remaining = Math.ceil((window._claimCooldownUntil - Date.now()) / 1000);
+            if (remaining <= 0) {
+              clearInterval(timer);
+              btn.disabled = false;
+              btn.textContent = originalText;
+              delete window._claimCooldownUntil;
+            } else {
+              btn.textContent = `Please wait ${remaining}s`;
+            }
+          }, 1000);
+        }
+
+        el.onclick = async function() {
+          const btn = this;
+
+          if (window._claimCooldownUntil && Date.now() < window._claimCooldownUntil) {
+            const secs = Math.ceil((window._claimCooldownUntil - Date.now()) / 1000);
+            alert(`Please wait ${secs} seconds before trying again.`);
+            return;
+          }
+
+          const originalText = btn.textContent || '';
+          btn.style.cursor = 'wait';
+          
+          // Show modal and hide message while loading
+          document.getElementById('pixelModal').showModal();
+          document.getElementById('pixelMessage').style.display = 'none';
+
+          try {
+            const r = await fetch(url, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({timestamp: Date.now(), found: true})
+            });
+
+            const d = await r.json();
+
+            if (d.success) {
+              claimedCode = d.code;
+              document.getElementById('pixelCode').textContent = d.code;
+              document.getElementById('pixelMessage').style.display = 'block';
+              document.getElementById('pixelMessage').textContent = '🎉 You found it! Here\'s your code:';
+              btn.style.display = 'none';
+            } else if (d.alreadyClaimed) {
+              document.getElementById('pixelModal').close();
+              document.getElementById('claimedModal').showModal();
+            } else {
+              const errMsg = (d.error || '').toString();
+              console.error('Error response:', d);
+              document.getElementById('pixelMessage').style.display = 'block';
+              document.getElementById('pixelCode').textContent = 'ERROR - CONTACT SUPPORT';
+              document.getElementById('pixelMessage').textContent = errMsg || 'There was an error claiming the pixel. Please contact us!';
+            }
+          } catch (e) {
+            console.error('Claim error:', e);
+            document.getElementById('pixelMessage').style.display = 'block';
+            document.getElementById('pixelCode').textContent = 'ERROR - CONTACT SUPPORT';
+            document.getElementById('pixelMessage').textContent = 'There was an error claiming the pixel. Please contact us!';
+          }
+        };
+      })();
+
+      window.copyPixelCode = function() {
+        const code = document.getElementById('pixelCode').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          alert('Code copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+        });
+      };
+
+      // Submit claim with TikTok username
+      function startSubmitCooldown(btn, seconds) {
+        const originalText = btn.textContent || '';
+        btn.disabled = true;
+        let remaining = seconds;
+        btn.textContent = `Please wait ${remaining}s`;
+        const timer = setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = originalText;
+          } else {
+            btn.textContent = `Please wait ${remaining}s`;
+          }
+        }, 1000);
+      }
+
+      window.submitClaim = async function() {
+        const usernameInput = document.getElementById('tiktokUsername');
+        const username = usernameInput.value.trim();
+        
+        if (!username) {
+          alert('⚠️ Please enter your TikTok username to reveal your code!');
+          usernameInput.focus();
+          return;
+        }
+
+        const cleanUsername = username.replace(/^@/, '');
+        
+        if (cleanUsername.length < 2) {
+          alert('⚠️ Please enter a valid TikTok username!');
+          usernameInput.focus();
+          return;
+        }
+
+        try {
+          const response = await fetch('https://claimpixel-uevkr2ryoa-uc.a.run.app', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              timestamp: Date.now(),
+              found: true,
+              tiktokUsername: cleanUsername,
+              updateOnly: true
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success || response.ok) {
+            document.getElementById('pixelCode').textContent = claimedCode;
+            document.getElementById('codeSection').style.display = 'block';
+            document.getElementById('pixelMessage').textContent = `Thanks @${cleanUsername}! Here's your code:`;
+            
+            usernameInput.disabled = true;
+            document.querySelector('button[onclick="submitClaim()"]').style.display = 'none';
+          } else {
+            console.error('Error response:', data);
+            const errMsg = (data.error || '').toString();
+            if (/too many requests/i.test(errMsg)) {
+              const cooldown = data.retryAfterSeconds || 30;
+              const btn = document.querySelector('button[onclick="submitClaim()"]');
+              if (btn) startSubmitCooldown(btn, cooldown);
+              alert(`Too many requests. Please wait ${cooldown} seconds.`);
+            } else {
+              alert('⚠️ There was an error saving your username. Please try again.');
+            }
+          }
+        } catch (e) {
+          console.error('Error saving username:', e);
+          document.getElementById('pixelCode').textContent = claimedCode;
+          document.getElementById('codeSection').style.display = 'block';
+          document.getElementById('pixelMessage').textContent = `Here's your code:`;
+          usernameInput.disabled = true;
+          document.querySelector('button[onclick="submitClaim()"]').style.display = 'none';
+        }
+      }
+    </script>
