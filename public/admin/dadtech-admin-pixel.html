@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DadTech Admin | Pixel Hunt</title>
+    <link rel="stylesheet" href="/dist/styles.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Poppins:wght@300;500;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #160b35 0%, #03051a 100%);
+            margin: 0;
+            padding: 0;
+            margin-left: 200px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: linear-gradient(to bottom, #0f0620, #1a0f35);
+            border-right: 2px solid rgba(59, 130, 246, 0.4);
+            padding: 2rem 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sidebar-title {
+            color: #93c5fd;
+            font-family: 'Audiowide', cursive;
+            text-align: center;
+            padding: 0 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .sidebar-btn {
+            padding: 0.75rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-btn:hover {
+            transform: translateX(5px);
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+        }
+
+        .sidebar-btn.active {
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            border-left-color: #fbbf24;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .sidebar-logout {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(to right, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .sidebar-logout:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin-left: -200px;
+        }
+
+        .card {
+            background: linear-gradient(to bottom, #1e1b4b, #1e3a8a);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-family: 'Audiowide', cursive;
+            color: #93c5fd;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.875rem;
+        }
+
+        .subtitle {
+            color: #a5b4fc;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: #93c5fd;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .status.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .status.info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+
+        .header {
+            background: linear-gradient(to right, #1e1b4b, #1e3a8a);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.4);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-align: left;
+        }
+
+        .header .subtitle {
+            margin: 0;
+            text-align: left;
+            font-size: 0.75rem;
+        }
+
+        .logout-btn {
+            background: linear-gradient(to right, #ef4444, #dc2626);
+            padding: 0.5rem 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card h3 {
+            color: #93c5fd;
+            font-size: 0.875rem;
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .stat-label {
+            color: #a5b4fc;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .actions-card {
+            background: linear-gradient(to bottom, #1e1b4b, #1e3a8a);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .actions-card h2 {
+            color: #93c5fd;
+            font-size: 1.25rem;
+            margin: 0 0 1rem 0;
+            font-family: 'Audiowide', cursive;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.75rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(to right, #6366f1, #a855f7);
+        }
+
+        .dashboard-section {
+            background: linear-gradient(to bottom, #1e1b4b, #1e3a8a);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-section h2 {
+            color: #93c5fd;
+            font-size: 1.25rem;
+            margin: 0 0 1rem 0;
+            font-family: 'Audiowide', cursive;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #a5b4fc;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        th {
+            padding: 0.75rem;
+            text-align: left;
+            color: #93c5fd;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.active {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+
+        .badge.claimed {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .code-cell {
+            font-family: monospace;
+            color: #fbbf24;
+        }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BV33W61TY2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date());
+        gtag('config', 'G-BV33W61TY2', { 'anonymize_ip': true });
+    </script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="sidebar" style="display: none;">
+        <div class="sidebar-title">🎮 DadTech</div>
+        <nav class="sidebar-nav">
+            <button class="sidebar-btn" onclick="window.location.href='dadtech-admin-pixel.html'">🎯 Pixel Hunt</button>
+            <button class="sidebar-btn active" onclick="window.location.href='dadtech-admin-community.html'">👥 Community</button>
+        </nav>
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="sidebar-logout">Logout</button>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm" class="login-wrapper" style="display: none;">
+        <div class="card">
+            <h1>🔐 Admin Login</h1>
+            <p class="subtitle">DadTech Community Control</p>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="admin@dadtech.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <div id="loginStatus"></div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminPanel" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>🎮 DadTech Admin</h1>
+                <p class="subtitle">Community Signups</p>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Stats Card -->
+            <div class="stats-card">
+                <h3>Community Signups</h3>
+                <p class="stat-value" id="signupCount">0</p>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="dashboard-section">
+                <h2>📋 Signup List</h2>
+                <button onclick="exportToCSV()" class="export-btn">📥 Export to CSV</button>
+                <div id="signupsContainer">
+                    <div class="empty-state">
+                        Loading signups...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCU2R3qRVbgULXXNNb_ylFrNgEi503NmzY",
+            authDomain: "dadtechgames.firebaseapp.com",
+            databaseURL: "https://dadtechgames-default-rtdb.firebaseio.com",
+            projectId: "dadtechgames",
+            storageBucket: "dadtechgames.firebasestorage.app",
+            messagingSenderId: "789983660743",
+            appId: "1:789983660743:web:1cac887b0bc490ab764ce2",
+            measurementId: "G-BV33W61TY2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('sidebar').style.display = 'flex';
+                await loadSignups();
+            } else {
+                document.getElementById('loginForm').style.display = 'flex';
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('sidebar').style.display = 'none';
+            }
+        });
+
+        window.handleLogin = async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const statusDiv = document.getElementById('loginStatus');
+
+            try {
+                statusDiv.className = 'status info';
+                statusDiv.textContent = 'Logging in...';
+
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = 'Login successful!';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Login failed: ' + error.message;
+            }
+        };
+
+        window.loadSignups = async () => {
+            try {
+                console.log('Starting loadSignups...');
+                const signupsRef = collection(db, 'communitySignups');
+                const snapshot = await getDocs(signupsRef);
+                
+                console.log('Snapshot empty:', snapshot.empty);
+                console.log('Snapshot size:', snapshot.size);
+                
+                const container = document.getElementById('signupsContainer');
+                
+                if (snapshot.empty) {
+                    console.log('No signups found');
+                    container.innerHTML = '<div class="empty-state">No community signups yet.</div>';
+                    document.getElementById('signupCount').textContent = '0';
+                    return;
+                }
+                
+                const signups = [];
+                snapshot.forEach((doc) => {
+                    console.log('Document:', doc.id, doc.data());
+                    signups.push(doc.data());
+                });
+                
+                console.log('Total signups:', signups.length);
+                
+                // Sort by signup date (newest first)
+                signups.sort((a, b) => {
+                    const dateA = a.signupDate?.toDate?.() || new Date(a.signupDate) || new Date(0);
+                    const dateB = b.signupDate?.toDate?.() || new Date(b.signupDate) || new Date(0);
+                    return dateB - dateA;
+                });
+                
+                let html = '<div class="signups-grid'

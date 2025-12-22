@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaos Cage | DadTech Games</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Poppins:wght@300;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a0033 0%, #330033 50%, #1a0033 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      color: #fff;
+    }
+
+    .chaos-title {
+      font-family: 'Creepster', cursive;
+      font-size: 4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glitch 2s infinite;
+      text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+
+    .chaos-button {
+      position: relative;
+      padding: 30px 60px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(45deg, #ff0080, #7928ca, #ff0080);
+      background-size: 200% 200%;
+      border: 3px solid #fff;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: gradient-shift 3s ease infinite;
+      box-shadow: 0 0 30px rgba(255, 0, 128, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .chaos-button:hover {
+      transform: scale(1.1) rotate(2deg);
+      box-shadow: 0 0 50px rgba(255, 0, 128, 0.9);
+    }
+
+    .chaos-button:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+    }
+
+    .chaos-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .chaos-overlay.active {
+      display: flex;
+    }
+
+    .chaos-content {
+      background: linear-gradient(135deg, #2d0050, #4a0080);
+      padding: 3rem;
+      border-radius: 20px;
+      max-width: 600px;
+      text-align: center;
+      border: 3px solid #ff00ff;
+      box-shadow: 0 0 50px rgba(255, 0, 255, 0.5);
+      animation: slideIn 0.5s ease;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .close-btn:hover {
+      opacity: 1;
+    }
+
+    .chaos-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #00ffff;
+    }
+
+    .chaos-content p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .character-popup {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: scale(0.5) rotate(180deg); opacity: 0; }
+      to { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .floating-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ff00ff;
+      border-radius: 50%;
+      animation: float 8s infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+    }
+
+    .challenge-emoji {
+      font-size: 4rem;
+      margin: 20px 0;
+    }
+
+    .poem-line {
+      font-style: italic;
+      margin: 10px 0;
+      color: #ff99ff;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border: 2px solid #fff;
+      border-radius: 25px;
+      transition: all 0.3s;
+      opacity: 0.7;
+    }
+
+    .back-link:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .cage-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transform-origin: top center;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .chain {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 180px;
+      background: repeating-linear-gradient(
+        0deg,
+        #888 0px,
+        #888 10px,
+        #666 10px,
+        #666 12px,
+        #444 12px,
+        #444 14px,
+        transparent 14px,
+        transparent 16px
+      );
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    .chain::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: #888;
+      border-radius: 50%;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .cage-image {
+      position: fixed;
+      width: 280px;
+      height: auto;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+      cursor: grab;
+      pointer-events: auto;
+      z-index: 20;
+    }
+    }
+
+    @keyframes subtle-swing {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .door-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .door {
+      position: relative;
+      width: 120px;
+      height: 180px;
+      background: linear-gradient(135deg, #8B4513, #A0522D);
+      border: 4px solid #654321;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .door:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(255, 0, 255, 0.6);
+    }
+
+    .door::before {
+      content: '🚪';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+    }
+
+    .door-number {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .door-knob {
+      position: absolute;
+      bottom: 50%;
+      right: 15px;
+      width: 12px;
+      height: 12px;
+      background: #FFD700;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #matterCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BV33W61TY2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date());
+      gtag('config', 'G-BV33W61TY2', { 'anonymize_ip': true });
+    </script>
+  </head>
+<body>
+  <canvas id="matterCanvas"></canvas>
+  
+  <a href="../index.html" class="back-link">← Back to Home</a>
+
+  <div class="floating-particles" id="particles"></div>
+
+  <h1 class="chaos-title">CHAOS CAGE</h1>
+  <p class="subtitle">Dare to press the button of unpredictability...</p>
+  
+  <button class="chaos-button" onclick="unleashChaos()">
+    RELEASE THE CHAOS
+  </button>
+
+  <div class="chaos-overlay" id="chaosOverlay">
+    <div class="chaos-content" id="chaosContent">
+      <button class="close-btn" onclick="closeChaos()">×</button>
+      <div id="chaosResult"></div>
+    </div>
+  </div>
+
+  <script>
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 8 + 's';
+      particle.style.animationDuration = (5 + Math.random() * 5) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Chaos events database
+    const chaosEvents = [
+      // Challenges
+      {
+        type: 'challenge',
+        title: '🎯 Random Challenge',
+        content: 'Do 10 jumping jacks RIGHT NOW while singing the alphabet backwards!',
+        emoji: '💪'
+      },
+      {
+        type: 'challenge',
+        title: '🎯 Chaos Challenge',
+        content: 'Hold a plank position for 30 seconds while making dinosaur noises!',
+        emoji: '🦖'
+      },
+      {
+        type: 'challenge',
+        title: '🎯 Silly Challenge',
+        content: 'Walk around your room like a crab for 1 minute while humming your favorite song!',
+        emoji: '🦀'
+      },
+      {
+        type: 'challenge',
+        title: '🎯 Dance Challenge',
+        content: 'Do the weirdest dance move you can think of for 20 seconds. BONUS: Record it!',
+        emoji: '💃'
+      },
+      {
+        type: 'challenge',
+        title: '🎯 Brain Challenge',
+        content: 'Name 10 things that are purple... while standing on one foot!',
+        emoji: '🧠'
+      },
+      // Poems
+      {
+        type: 'poem',
+        title: '📜 Chaos Poem',
+        lines: [
+          'A purple elephant danced on the moon,',
+          'While singing jazz with a silver spoon,',
+          'The stars turned into cheese,',
+          'And time froze in a sneeze!'
+        ]
+      },
+      {
+        type: 'poem',
+        title: '📜 Nonsense Verse',
+        lines: [
+          'Backwards flew the clockwork bee,',
+          'Through oceans made of curry tea,',
+          'Where fish wear hats of rainbow light,',
+          'And day becomes the newest night!'
+        ]
+      },
+      {
+        type: 'poem',
+        title: '📜 Abstract Thoughts',
+        lines: [
+          'Dreams taste like Tuesday mornings,',
+          'When gravity forgets to wake,',
+          'The silence screams in colors bright,',
+          'And shadows dance in broad daylight!'
+        ]
+      },
+      // Character appearances
+      {
+        type: 'character',
+        title: '👾 A Wild Character Appears!',
+        name: 'Sir Glitchworth',
+        message: 'Greetings, mortal! I am Sir Glitchworth, Guardian of the Digital Realm! I challenge you to... absolutely nothing. Carry on! *disappears in a puff of pixels*',
+        ascii: '(◕‿◕✿)'
+      },
+      {
+        type: 'character',
+        title: '🤖 Robot Encounter',
+        name: 'Beep-Boop 3000',
+        message: 'ERROR: HUMOR MODULE MALFUNCTIONING. WHY DID THE ROBOT CROSS THE ROAD? TO COMPILE ON THE OTHER SIDE. *robotic laughter*',
+        ascii: '┌[ ⊙ ‿ ⊙ ]┐'
+      },
+      {
+        type: 'character',
+        title: '👻 Spooky Visit',
+        name: 'The Meme Ghost',
+        message: 'BOO! Just kidding, I\'m not scary. I only haunt people with outdated memes from 2012. Can I offer you a "Y U NO" in these trying times?',
+        ascii: '(っ◔◡◔)っ'
+      },
+      {
+        type: 'character',
+        title: '🐉 Dragon Wisdom',
+        name: 'Pixel the Confused Dragon',
+        message: 'I would breathe fire, but I forgot where I left it... Oh well! Here\'s some wisdom: Always put your socks on before your shoes. You\'re welcome.',
+        ascii: '≧◉ᴥ◉≦'
+      },
+      // Fortune/Predictions
+      {
+        type: 'fortune',
+        title: '🔮 Chaos Fortune',
+        content: 'Your future holds... a sandwich. A really good sandwich. But you must find it yourself.',
+        emoji: '🥪'
+      },
+      {
+        type: 'fortune',
+        title: '🔮 Strange Prediction',
+        content: 'Tomorrow, you will think about penguins exactly 3 times. This is unavoidable.',
+        emoji: '🐧'
+      },
+      {
+        type: 'fortune',
+        title: '🔮 Mystical Reading',
+        content: 'The cosmic forces say: Left sock before right sock today. Also, stay hydrated.',
+        emoji: '💫'
+      },
+      // Random facts
+      {
+        type: 'fact',
+        title: '🧩 Totally Real Fact',
+        content: 'Did you know? 73% of statistics are made up on the spot. Including this one. Mind = Blown.',
+        emoji: '🤯'
+      },
+      {
+        type: 'fact',
+        title: '🧩 Strange Truth',
+        content: 'Fun Fact: Rubber ducks don\'t actually solve programming bugs. But they\'re great listeners!',
+        emoji: '🦆'
+      },
+      {
+        type: 'fact',
+        title: '🧩 Chaos Knowledge',
+        content: 'If you rearrange the letters in "CHAOS CAGE" you get... well, nothing meaningful. But it sounds cool!',
+        emoji: '🎪'
+      },
+      // Mini games/tasks
+      {
+        type: 'game',
+        title: '🎮 Quick Game',
+        content: 'Close your eyes and try to touch your nose with your index finger. Did you do it? You\'re now 12% more coordinated!',
+        emoji: '👃'
+      },
+      {
+        type: 'game',
+        title: '🎮 Memory Test',
+        content: 'Quick! Name 5 things in your room without looking. Go! (No cheating!)',
+        emoji: '🧠'
+      },
+      // Door choices
+      {
+        type: 'doors',
+        title: '🚪 Choose Your Door',
+        subtitle: 'Three doors stand before you. Pick wisely... or don\'t!',
+        doors: [
+          {
+            number: 1,
+            result: {
+              title: '🎉 Door #1: The Party Portal!',
+              content: 'You\'ve entered the eternal party! Now you must do the Macarena... ONCE. That\'s it. Party\'s over. Thanks for coming! 🎊',
+              emoji: '🎉'
+            }
+          },
+          {
+            number: 2,
+            result: {
+              title: '🧙 Door #2: The Wizard\'s Study',
+              content: 'A wizard appears and grants you "The Power of Perfect Parallel Parking." You\'re welcome. *poof* 🪄✨',
+              emoji: '🧙‍♂️'
+            }
+          },
+          {
+            number: 3,
+            result: {
+              title: '🌮 Door #3: Taco Tuesday',
+              content: 'Congratulations! It\'s ALWAYS Taco Tuesday in this room. But there are no tacos. Only the IDEA of tacos. Philosophy is weird. 🌮',
+              emoji: '🤔'
+            }
+          }
+        ]
+      },
+      {
+        type: 'doors',
+        title: '🚪 The Three Challenges',
+        subtitle: 'Each door hides a different challenge. Choose your fate!',
+        doors: [
+          {
+            number: 1,
+            result: {
+              title: '🎯 Door #1: The Speed Round!',
+              content: 'Say "toy boat" 10 times fast without messing up! If you failed, try again but slower. If you succeeded, you\'re a legend! 🚤',
+              emoji: '🏃'
+            }
+          },
+          {
+            number: 2,
+            result: {
+              title: '🎨 Door #2: The Art Challenge!',
+              content: 'Draw a self-portrait with your NON-DOMINANT hand. No, really. Do it. We\'ll wait... Masterpiece status: ACHIEVED! 🎨',
+              emoji: '🖌️'
+            }
+          },
+          {
+            number: 3,
+            result: {
+              title: '🎵 Door #3: The Song Saga!',
+              content: 'Sing the first song that pops into your head... but replace every noun with "banana." 🎵 Banana awaits! 🍌',
+              emoji: '🎤'
+            }
+          }
+        ]
+      },
+      {
+        type: 'doors',
+        title: '🚪 Mystery Doors',
+        subtitle: 'What lies behind each door? Only one way to find out...',
+        doors: [
+          {
+            number: 1,
+            result: {
+              title: '👻 Door #1: The Spooky Door!',
+              content: 'BOO! Just kidding. This door leads to a room full of friendly ghosts who just want to talk about their feelings. Group therapy time! 👻💭',
+              emoji: '👻'
+            }
+          },
+          {
+            number: 2,
+            result: {
+              title: '🎪 Door #2: The Circus Portal!',
+              content: 'You\'re now the ringmaster! Your first act: juggle 3 imaginary balls while announcing yourself in a silly voice. THE SHOW MUST GO ON! 🎪',
+              emoji: '🤹'
+            }
+          },
+          {
+            number: 3,
+            result: {
+              title: '🚀 Door #3: Space Oddity!',
+              content: 'Welcome to space! Gravity is optional here. Float around your room for 30 seconds making "whoosh" sounds. Houston, we have liftoff! 🚀',
+              emoji: '👨‍🚀'
+            }
+          }
+        ]
+      },
+      {
+        type: 'doors',
+        title: '🚪 The Flavor Doors',
+        subtitle: 'Each door represents a different... experience.',
+        doors: [
+          {
+            number: 1,
+            result: {
+              title: '🍕 Door #1: Pizza Paradise!',
+              content: 'This door smells like pizza but looks like confusion. Your challenge: Describe your favorite pizza to someone who has never heard of pizza. Good luck! 🍕',
+              emoji: '🤔'
+            }
+          },
+          {
+            number: 2,
+            result: {
+              title: '🎲 Door #2: The Random Door!',
+              content: 'This door is SO random, it can\'t even decide what\'s behind it! So here\'s a fact: Wombats poop cubes. You\'re welcome for that knowledge. 💩',
+              emoji: '🎲'
+            }
+          },
+          {
+            number: 3,
+            result: {
+              title: '🌈 Door #3: Rainbow Road!',
+              content: 'You\'ve unlocked the rainbow road! Name one thing for each color of the rainbow RIGHT NOW. Go go go! 🌈',
+              emoji: '🏁'
+            }
+          }
+        ]
+      }
+    ];
+
+    function unleashChaos() {
+      const overlay = document.getElementById('chaosOverlay');
+      const content = document.getElementById('chaosResult');
+      
+      // Pick random chaos event
+      const event = chaosEvents[Math.floor(Math.random() * chaosEvents.length)];
+      
+      // Generate content based on type
+      let html = '';
+      
+      switch(event.type) {
+        case 'challenge':
+          html = `
+            <div class="challenge-emoji">${event.emoji}</div>
+            <h2>${event.title}</h2>
+            <p>${event.content}</p>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+              Timer starts NOW! ⏰
+            </p>
+          `;
+          break;
+          
+        case 'poem':
+          html = `
+            <h2>${event.title}</h2>
+            ${event.lines.map(line => `<p class="poem-line">${line}</p>`).join('')}
+            <p style="margin-top: 20px; opacity: 0.7;">- The Chaos Oracle</p>
+          `;
+          break;
+          
+        case 'character':
+          html = `
+            <h2>${event.title}</h2>
+            <div style="font-size: 5rem; margin: 20px 0;">${event.ascii}</div>
+            <h3 style="color: #00ffff; margin-bottom: 10px;">${event.name}</h3>
+            <p>"${event.message}"</p>
+          `;
+          break;
+          
+        case 'fortune':
+          html = `
+            <div class="challenge-emoji">${event.emoji}</div>
+            <h2>${event.title}</h2>
+            <p style="font-size: 1.3rem; color: #ffff99;">${event.content}</p>
+          `;
+          break;
+          
+        case 'fact':
+          html = `
+            <div class="challenge-emoji">${event.emoji}</div>
+            <h2>${event.title}</h2>
+            <p>${event.content}</p>
+          `;
+          break;
+          
+        case 'game':
+          html = `
+            <div class="challenge-emoji">${event.emoji}</div>
+            <h2>${event.title}</h2>
+            <p>${event.content}</p>
+          `;
+          break;
+
+        case 'doors':
+          html = `
+            <h2>${event.title}</h2>
+            <p style="margin-bottom: 10px; opacity: 0.8;">${event.subtitle}</p>
+            <div class="door-container">
+              ${event.doors.map(door => `
+                <div class="door" onclick="openDoor(${JSON.stringify(door.result).replace(/"/g, '&quot;')})">
+                  <div class="door-number">${door.number}</div>
+                  <div class="door-knob"></div>
+                </div>
+              `).join('')}
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">
+              Click a door to reveal what's inside...
+            </p>
+          `;
+          break;
+      }
+      
+      content.innerHTML = html;
+      overlay.classList.add('active');
+      
+      // Random background color for overlay content
+      const colors = [
+        'linear-gradient(135deg, #2d0050, #4a0080)',
+        'linear-gradient(135deg, #003d5c, #00688b)',
+        'linear-gradient(135deg, #4a0000, #800000)',
+        'linear-gradient(135deg, #1a3d00, #2d6600)',
+        'linear-gradient(135deg, #3d1a00, #662d00)'
+      ];
+      document.querySelector('.chaos-content').style.background = 
+        colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function openDoor(result) {
+      const content = document.getElementById('chaosResult');
+      const html = `
+        <div class="challenge-emoji">${result.emoji}</div>
+        <h2>${result.title}</h2>
+        <p>${result.content}</p>
+        <p style="margin-top: 30px; font-size: 0.9rem; opacity: 0.6;">
+          You chose... wisely? Maybe? 🤷
+        </p>
+      `;
+      content.innerHTML = html;
+    }
+
+    function closeChaos() {
+      document.getElementById('chaosOverlay').classList.remove('active');
+    }
+
+    // Close on overlay click
+    document.getElementById('chaosOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeChaos();
+    });
+
+    // Easter egg: Konami code
+    let konamiCode = [];
+    const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    document.addEventListener('keydown', (e) => {
+      konamiCode.push(e.key);
+      konamiCode = konamiCode.slice(-10);
+      
+      if (konamiCode.join(',') === konamiSequence.join(',')) {
+        document.body.style.transform = 'rotate(180deg)';
+        setTimeout(() => {
+          document.body.style.transform = 'rotate(0deg)';
+          alert('🎉 You found the secret! But now everything is back to normal... or is it? 🎉');
+        }, 3000);
+      }
+    });
+
+    // Interactive swinging cage with Matter.js chains
+    const { Engine, World, Bodies, Body, Composite, Composites, Constraint, Render, Mouse, MouseConstraint, Runner, Events } = Matter;
+    
+    const canvas = document.getElementById('matterCanvas');
+    
+    // Load cage image
+    const cageImg = new Image();
+    cageImg.src = 'cage.png';
+    
+    // Create Matter.js engine
+    const engine = Engine.create();
+    const world = engine.world;
+    
+    // Create renderer
+    const render = Render.create({
+      canvas: canvas,
+      engine: engine,
+      options: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        wireframes: false,
+        background: 'transparent'
+      }
+    });
+    
+    Render.run(render);
+    
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+    
+    // Storage for cage body
+    let cageBody = null;
+    
+    // Create chain horizontally first
+    const pivotX = window.innerWidth / 2;
+    const pivotY = 50;
+    
+    const group = Body.nextGroup(true);
+    
+    // Create SHORT chain - just 2 links
+    const chain = Composites.stack(pivotX - 50, pivotY, 2, 1, 10, 10, function(x, y) {
+      return Bodies.rectangle(x, y, 50, 20, { 
+        collisionFilter: { group: group },
+        frictionAir: 0.05,
+        render: {
+          fillStyle: '#888',
+          strokeStyle: '#666',
+          lineWidth: 1
+        }
+      });
+    });
+    
+    // Chain them together with constraints
+    Composites.chain(chain, 0.5, 0, -0.5, 0, { 
+      stiffness: 0.8, 
+      damping: 0.1,
+      length: 1,
+      render: { type: 'line', strokeStyle: '#666', lineWidth: 2 }
+    });
+    
+    // Pin the first link to the pivot point
+    Composite.add(chain, Constraint.create({ 
+      bodyB: chain.bodies[0],
+      pointB: { x: -25, y: 0 },
+      pointA: { x: pivotX, y: pivotY },
+      stiffness: 0.8,
+      damping: 0.1,
+      render: { type: 'line', strokeStyle: '#888', lineWidth: 2 }
+    }));
+    
+    // Create the cage body - attach to last link - AFTER IMAGE LOADS
+    cageImg.onload = function() {
+      const lastLink = chain.bodies[chain.bodies.length - 1];
+      cageBody = Bodies.rectangle(lastLink.position.x, lastLink.position.y + 80, 140, 140, {
+        density: 0.04,
+        frictionAir: 0.02,
+        restitution: 0.1,
+        render: { 
+          fillStyle: 'transparent',
+          strokeStyle: 'transparent'
+        }
+      });
+      
+      // Connect cage to last chain link - attach at top
+      Composite.add(chain, Constraint.create({
+        bodyA: lastLink,
+        bodyB: cageBody,
+        pointA: { x: 0, y: 10 },
+        pointB: { x: 0, y: -70 },
+        length: 10,
+        stiffness: 0.85,
+        damping: 0.1,
+        render: { type: 'line', strokeStyle: '#888', lineWidth: 2 }
+      }));
+      
+      // Add to world
+      Composite.add(world, [cageBody]);
+    };
+    
+    // Initial chain only (cage added when image loads)
+    Composite.add(world, [chain]);
+    
+    // Mouse control
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+      }
+    });
+    
+    Composite.add(world, mouseConstraint);
+    render.mouse = mouse;
+    
+    // Custom rendering to draw cage sprite
+    Events.on(render, 'afterRender', function() {
+      if (cageBody && cageImg.complete) {
+        const ctx = render.context;
+        ctx.save();
+        ctx.translate(cageBody.position.x, cageBody.position.y);
+        ctx.rotate(cageBody.angle);
+        ctx.drawImage(cageImg, -70, -70, 140, 140);
+        ctx.restore();
+      }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      render.options.width = window.innerWidth;
+      render.options.height = window.innerHeight;
+      Render.setSize(render, window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

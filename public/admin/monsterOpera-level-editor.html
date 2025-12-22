@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monster Opera Level Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; margin: 0; padding: 24px; background: #0b1220; color: #eef2ff; }
+    .wrap { max-width: 1400px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; }
+    .panel { background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    label { font-weight: 700; }
+    input[type="number"], input[type="email"], input[type="password"], select { padding: 8px 10px; border-radius: 8px; border: 1px solid #374151; background: #0f172a; color: #eef2ff; }
+    button { padding: 10px 14px; border-radius: 10px; border: none; background: #2563eb; color: white; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+    button:hover { background: #1d4ed8; }
+    button.secondary { background: #6b7280; }
+    button.secondary:hover { background: #5a6370; }
+    button.active { background: #10b981; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    #editorLayout { display: grid; grid-template-columns: 200px 1fr; gap: 16px; }
+    #palette { background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 16px; }
+    .palette-section { margin-bottom: 20px; }
+    .palette-section h3 { margin: 0 0 12px; font-size: 14px; color: #9ca3af; }
+    .palette-item { background: #0f172a; border: 2px solid #374151; border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: grab; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .palette-item:hover { border-color: #60a5fa; transform: translateY(-2px); }
+    .palette-item:active { cursor: grabbing; }
+    .palette-item canvas { pointer-events: none; }
+    .palette-item span { font-size: 12px; font-weight: 600; }
+    #stage { position: relative; height: 550px; border-radius: 12px; overflow: hidden; background: #091527; box-shadow: 0 10px 40px rgba(0,0,0,0.5); cursor: default; }
+    #stageCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .status { margin-top: 8px; font-size: 14px; }
+    .pill { display: inline-block; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Monster Opera Level Editor</h1>
+    <p class="pill">Drag sprites from palette onto stage. Right-click to delete. Drag placed items to move.</p>
+
+    <div id="loginPanel" class="panel">
+      <h2>Admin Login</h2>
+      <div class="row">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="admin@dadtech.com" />
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" />
+        <button id="loginBtn">Login</button>
+        <span id="loginStatus" class="status"></span>
+      </div>
+    </div>
+
+    <div id="editorPanel" style="display:none;">
+      <div class="panel">
+        <div class="row">
+          <label for="levelNum">Level</label>
+          <input id="levelNum" type="number" min="1" value="1" />
+          <button id="loadBtn" class="secondary">Load</button>
+          <button id="saveBtn">Save Level</button>
+          <button id="clearBtn" class="secondary">🗑 Clear All</button>
+          <span id="editorStatus" class="status"></span>
+        </div>
+      </div>
+
+      <div id="editorLayout">
+        <div id="palette">
+          <div class="palette-section">
+            <h3>ACTORS</h3>
+            <div class="palette-item" draggable="true" data-type="actor" data-actor="lady">
+              <canvas width="95" height="116"></canvas>
+              <span>Lady</span>
+            </div>
+            <div class="palette-item" draggable="true" data-type="actor" data-actor="knight">
+              <canvas width="60" height="116"></canvas>
+              <span>Knight</span>
+            </div>
+          </div>
+          <div class="palette-section">
+            <h3>PROPS</h3>
+            <div class="palette-item" draggable="true" data-type="lamp">
+              <canvas width="54" height="90"></canvas>
+              <span>Lamp</span>
+            </div>
+          </div>
+          <div class="palette-section">
+            <h3>PLATFORMS</h3>
+            <div class="palette-item" draggable="true" data-type="platform">
+              <canvas width="30" height="30"></canvas>
+              <span>Float Platform</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="stage" class="panel">
+          <canvas id="stageCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCU2R3qRVbgULXXNNb_ylFrNgEi503NmzY",
+      authDomain: "dadtechgames.firebaseapp.com",
+      databaseURL: "https://dadtechgames-default-rtdb.firebaseio.com",
+      projectId: "dadtechgames",
+      storageBucket: "dadtechgames.firebasestorage.app",
+      messagingSenderId: "789983660743",
+      appId: "1:789983660743:web:1cac887b0bc490ab764ce2",
+      measurementId: "G-BV33W61TY2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginPanel = document.getElementById('loginPanel');
+    const editorPanel = document.getElementById('editorPanel');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginStatus = document.getElementById('loginStatus');
+
+    const levelNumEl = document.getElementById('levelNum');
+    const loadBtn = document.getElementById('loadBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const stage = document.getElementById('stage');
+    const canvas = document.getElementById('stageCanvas');
+    const ctx = canvas.getContext('2d');
+    const palette = document.getElementById('palette');
+
+    let currentLevel = 1;
+    let levelData = null;
+    let actors = [];
+    let props = [];
+    let platforms = [];
+    let dragging = null;
+    let dragSource = null; // 'palette' or 'stage'
+    
+    // Load images
+    let spriteSheet = new Image();
+    let lampImg = new Image();
+    let platImg = new Image();
+    let bgImg = new Image();
+    let imagesLoaded = 0;
+    
+    function imageLoaded(){
+      imagesLoaded++;
+      if(imagesLoaded === 4){
+        renderPaletteItems();
+        draw();
+      }
+    }
+    
+    spriteSheet.onload = imageLoaded;
+    spriteSheet.src = './images/SpriteSheet2.png';
+    
+    lampImg.onload = imageLoaded;
+    lampImg.src = './images/lamp.png';
+    
+    platImg.onload = imageLoaded;
+    platImg.src = './images/floatingplat.png';
+    
+    bgImg.onload = imageLoaded;
+    bgImg.src = './images/SpriteSheet2.png';
+
+    function resizeCanvas(){
+      canvas.width = stage.clientWidth;
+      canvas.height = stage.clientHeight;
+      draw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function stageTop(){
+      const STAGE_HEIGHT = 55;
+      return canvas.height - STAGE_HEIGHT - 35;
+    }
+
+    function renderPaletteItems(){
+      // Render lady
+      const ladyItem = palette.querySelector('[data-actor="lady"] canvas');
+      if(ladyItem){
+        const ladyCtx = ladyItem.getContext('2d');
+        ladyCtx.drawImage(spriteSheet, 0, 0, 95, 116, 0, 0, 95, 116);
+      }
+      
+      // Render knight
+      const knightItem = palette.querySelector('[data-actor="knight"] canvas');
+      if(knightItem){
+        const knightCtx = knightItem.getContext('2d');
+        knightCtx.drawImage(spriteSheet, 24, 124, 60, 116, 0, 0, 60, 116);
+      }
+      
+      // Render lamp
+      const lampItem = palette.querySelector('[data-type="lamp"] canvas');
+      if(lampItem){
+        const lampCtx = lampItem.getContext('2d');
+        lampCtx.drawImage(lampImg, 0, 0, lampImg.width, lampImg.height, 0, 0, 54, 90);
+      }
+      
+      // Render platform
+      const platItem = palette.querySelector('[data-type="platform"] canvas');
+      if(platItem){
+        const platCtx = platItem.getContext('2d');
+        platCtx.drawImage(platImg, 0, 0, platImg.width, platImg.height, 0, 0, 80, 30);
+      }
+    }
+
+    function draw(){
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      const stageTopY = stageTop();
+      
+      // Draw background from sprite sheet
+      const sx = 100, sy = 0, sHeight = 497;
+      const sWidth = Math.max(1, bgImg.width - sx);
+      if(bgImg.complete){
+        ctx.drawImage(bgImg, sx, sy, sWidth, sHeight, 0, 0, w, h);
+      } else {
+        ctx.fillStyle = '#0e223a';
+        ctx.fillRect(0, 0, w, h);
+      }
+      
+      // Draw platforms
+      platforms.forEach(p => {
+        const w = Math.max(80, Number(p.w) || 80);
+        const h = Math.max(20, Number(p.h) || 30);
+        if(platImg.complete){
+          ctx.drawImage(platImg, p.x, p.y, w, h);
+        }
+      });
+      
+      // Draw props (lamps)
+      props.forEach(p => {
+        if(lampImg.complete){
+          ctx.drawImage(lampImg, p.x, p.y, p.w, p.h);
+        }
+      });
+      
+      // Draw actors with sprites
+      actors.forEach(a => {
+        if(spriteSheet.complete){
+          ctx.drawImage(spriteSheet, a.spriteX, a.spriteY, a.w, a.h, a.x, a.y, a.w, a.h);
+        }
+      });
+      
+      // Stage line
+      ctx.strokeStyle = '#93c5fd';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, stageTopY);
+      ctx.lineTo(w, stageTopY);
+      ctx.stroke();
+    }
+
+    function hitProp(x, y){
+      // Check platforms first
+      for(let i = platforms.length - 1; i >= 0; i--){
+        const p = platforms[i];
+        if(x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h) return { type: 'platform', idx: i };
+      }
+      // Then lamps
+      for(let i = props.length - 1; i >= 0; i--){
+        const p = props[i];
+        if(x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h) return { type: 'lamp', idx: i };
+      }
+      // Then actors
+      for(let i = actors.length - 1; i >= 0; i--){
+        const a = actors[i];
+        if(x >= a.x && x <= a.x + a.w && y >= a.y && y <= a.y + a.h) return { type: 'actor', idx: i };
+      }
+      return null;
+    }
+
+    // Palette drag events
+    palette.addEventListener('dragstart', (e)=>{
+      if(!e.target.classList.contains('palette-item')) return;
+      dragSource = 'palette';
+      const type = e.target.dataset.type;
+      const actorType = e.target.dataset.actor;
+      e.dataTransfer.setData('type', type);
+      if(actorType) e.dataTransfer.setData('actor', actorType);
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+
+    // Canvas drag events
+    canvas.addEventListener('dragover', (e)=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+    });
+
+    canvas.addEventListener('drop', (e)=>{
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const type = e.dataTransfer.getData('type');
+      const actorType = e.dataTransfer.getData('actor');
+      
+      if(type === 'actor'){
+        const isKnight = actorType === 'knight';
+        const w = isKnight ? 60 : 95;
+        const h = 116;
+        const spriteX = isKnight ? 24 : 0;
+        const spriteY = isKnight ? 124 : 0;
+        actors.push({ 
+          x: Math.max(0, Math.min(canvas.width - w, x - w/2)), 
+          y: Math.max(0, Math.min(canvas.height - h, y - h/2)),
+          w, h, spriteX, spriteY, type: actorType 
+        });
+      } else if(type === 'lamp'){
+        const w = 54, h = 90;
+        props.push({ 
+          type: 'lamp',
+          x: Math.max(0, Math.min(canvas.width - w, x - w/2)), 
+          y: Math.max(0, Math.min(canvas.height - h, y - h/2)),
+          w, h 
+        });
+      } else if(type === 'platform'){
+        const w = 80, h = 30;
+        platforms.push({ 
+          type: 'floatplat',
+          x: Math.max(0, Math.min(canvas.width - w, x - w/2)), 
+          y: Math.max(0, Math.min(canvas.height - h, y - h/2)),
+          w, h 
+        });
+      }
+      draw();
+    });
+
+    // Mouse events for moving items on canvas
+    canvas.addEventListener('mousedown', (e)=>{
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const hit = hitProp(x, y);
+      if(hit){
+        const obj = hit.type === 'actor' ? actors[hit.idx] : 
+                    hit.type === 'lamp' ? props[hit.idx] : platforms[hit.idx];
+        dragging = { ...hit, offsetX: x - obj.x, offsetY: y - obj.y };
+      }
+    });
+
+    canvas.addEventListener('mousemove', (e)=>{
+      if(!dragging) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      if(dragging.type === 'actor'){
+        const a = actors[dragging.idx];
+        a.x = Math.max(0, Math.min(canvas.width - a.w, x - dragging.offsetX));
+        a.y = Math.max(0, Math.min(canvas.height - a.h, y - dragging.offsetY));
+      } else if(dragging.type === 'lamp'){
+        const p = props[dragging.idx];
+        p.x = Math.max(0, Math.min(canvas.width - p.w, x - dragging.offsetX));
+        p.y = Math.max(0, Math.min(canvas.height - p.h, y - dragging.offsetY));
+      } else if(dragging.type === 'platform'){
+        const p = platforms[dragging.idx];
+        p.x = Math.max(0, Math.min(canvas.width - p.w, x - dragging.offsetX));
+        p.y = Math.max(0, Math.min(canvas.height - p.h, y - dragging.offsetY));
+      }
+      draw();
+    });
+
+    canvas.addEventListener('mouseup', ()=>{ dragging = null; });
+    canvas.addEventListener('mouseleave', ()=>{ dragging = null; });
+
+    canvas.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const hit = hitProp(x, y);
+      if(hit){
+        const itemName = hit.type === 'actor' ? `${actors[hit.idx].type} actor` : 
+                         hit.type === 'lamp' ? 'lamp' : 'platform';
+        if(confirm(`Delete this ${itemName}?`)){
+          if(hit.type === 'actor'){
+            actors.splice(hit.idx, 1);
+          } else if(hit.type === 'lamp'){
+            props.splice(hit.idx, 1);
+          } else if(hit.type === 'platform'){
+            platforms.splice(hit.idx, 1);
+          }
+          draw();
+        }
+      }
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      if(confirm('Clear all actors, props, and platforms?')){
+        actors = [];
+        props = [];
+        platforms = [];
+        draw();
+      }
+    });
+
+    loginBtn.addEventListener('click', async ()=>{
+      loginStatus.textContent = 'Logging in...';
+      try{
+        await signInWithEmailAndPassword(auth, email.value, password.value);
+        loginStatus.textContent = 'Logged in';
+      }catch(err){
+        loginStatus.textContent = 'Login failed: ' + err.message;
+      }
+    });
+
+    onAuthStateChanged(auth, (user)=>{
+      if(user){
+        loginPanel.style.display = 'none';
+        editorPanel.style.display = '';
+        resizeCanvas();
+      } else {
+        loginPanel.style.display = '';
+        editorPanel.style.display = 'none';
+      }
+    });
+
+    loadBtn.addEventListener('click', async ()=>{
+      editorStatus.textContent = 'Loading level...';
+      currentLevel = parseInt(levelNumEl.value || '1', 10);
+      try{
+        const ref = doc(db, 'monsterOperaLevels', `level_${currentLevel}`);
+        const snap = await getDoc(ref);
+        if(snap.exists()){
+          levelData = snap.data();
+          actors = (levelData.actors || []).map(a=>{
+            const isKnight = a.type === 'knight';
+            return {
+              x: a.x || 200,
+              y: a.y || stageTop(),
+              type: a.type || 'lady',
+              w: isKnight ? 60 : 95,
+              h: 116,
+              spriteX: isKnight ? 24 : 0,
+              spriteY: isKnight ? 124 : 0
+            };
+          });
+          props = (levelData.props || []).map(p=>({
+            type: p.type || 'lamp',
+            x: p.x || 400,
+            y: p.y || (stageTop() - 70),
+            w: p.w || 54,
+            h: p.h || 90
+          }));
+          platforms = (levelData.platforms || []).map(p=>{
+            const clampedW = Math.max(80, Number(p.w) || 80);
+            const clampedH = Math.max(20, Number(p.h) || 30);
+            return {
+              type: p.type || 'floatplat',
+              x: Number(p.x) || 400,
+              y: Number(p.y) || 200,
+              w: clampedW,
+              h: clampedH
+            };
+          });
+          editorStatus.textContent = `Loaded level ${currentLevel}: ${actors.length} actors, ${props.length} props, ${platforms.length} platforms`;
+        } else {
+          levelData = { level: currentLevel, weapons: Array(6).fill('bomb'), actors: [], props: [], platforms: [] };
+          actors = [];
+          props = [];
+          platforms = [];
+          editorStatus.textContent = `No level found; created defaults for ${currentLevel}`;
+        }
+        resizeCanvas();
+      }catch(err){
+        editorStatus.textContent = 'Error: ' + err.message;
+      }
+    });
+
+    saveBtn.addEventListener('click', async ()=>{
+      editorStatus.textContent = 'Saving level...';
+      try{
+        const ref = doc(db, 'monsterOperaLevels', `level_${currentLevel}`);
+        const next = levelData || { level: currentLevel };
+        next.actors = actors.map(a=>({ x: Math.round(a.x), y: Math.round(a.y), type: a.type }));
+        next.props = props.map(p=>({ type: p.type, x: Math.round(p.x), y: Math.round(p.y), w: p.w, h: p.h }));
+        next.platforms = platforms.map(p=>({
+          type: p.type,
+          x: Math.round(p.x),
+          y: Math.round(p.y),
+          w: Math.max(80, Math.round(p.w)),
+          h: Math.max(20, Math.round(p.h))
+        }));
+        await setDoc(ref, next, { merge: true });
+        editorStatus.textContent = 'Saved level';
+      }catch(err){
+        editorStatus.textContent = 'Save failed: ' + err.message;
+      }
+    });
+
+    resizeCanvas();
+  </script>
+</body>
+</html>

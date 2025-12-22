@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Admin Home | DadTech</title>
+        <style>
+            body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#070617;color:#e6eef8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+            .box{width:100%;max-width:420px;padding:24px;border-radius:12px;background:linear-gradient(180deg,#0b1024,#111233);box-shadow:0 10px 30px rgba(0,0,0,.6);border:1px solid rgba(99,102,241,.08)}
+            h1{margin:0 0 12px 0;font-size:20px}
+            label{display:block;color:#cfe0ff;margin-bottom:8px;font-weight:600}
+            input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#e6eef8;margin-bottom:12px;box-sizing:border-box}
+            button{width:100%;padding:10px;border-radius:8px;border:none;background:linear-gradient(90deg,#3b82f6,#8b5cf6);color:white;font-weight:700;cursor:pointer}
+            .small{font-size:13px;color:#9fb0e6;text-align:center;margin-top:10px}
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h1>DadTech Admin — Sign In</h1>
+            <p style="color:#9fb0e6;margin-top:0;margin-bottom:16px;font-size:14px">Sign in to access admin tools. You will be taken to Pixel Hunt when authenticated.</p>
+
+            <form id="loginForm">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="admin@dadtech.com" required />
+
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Your password" required />
+
+                <button type="submit">Sign In</button>
+            </form>
+
+            <p class="small">If you're already signed in elsewhere, you'll be redirected automatically.</p>
+        </div>
+
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+            import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyCU2R3qRVbgULXXNNb_ylFrNgEi503NmzY",
+                authDomain: "dadtechgames.firebaseapp.com",
+                databaseURL: "https://dadtechgames-default-rtdb.firebaseio.com",
+                projectId: "dadtechgames",
+                storageBucket: "dadtechgames.firebasestorage.app",
+                messagingSenderId: "789983660743",
+                appId: "1:789983660743:web:1cac887b0bc490ab764ce2",
+                measurementId: "G-BV33W61TY2"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+
+            // If user is already signed in, go to Pixel Hunt admin
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Redirect to the main admin page and open the Pixel tab
+                    window.location.href = '/admin/dadtech-admin.html#pixel';
+                }
+            });
+
+            // Handle login form submit
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    // onAuthStateChanged will redirect
+                } catch (err) {
+                    console.error('Login error', err);
+                    alert('Login failed: ' + (err.message || err));
+                }
+            });
+        </script>
+    </body>
+</html>
