@@ -1,6 +1,9 @@
 node_modules/
 dist/
 .firebase/
+# Ignore public by default, but keep monsterOpera game tracked
 public/
+!public/monsterOpera/
+!public/monsterOpera/**
 .DS_Store
 *.log

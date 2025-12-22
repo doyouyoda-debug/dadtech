@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#failureModal {
+  background-image: url('./images/modal.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
